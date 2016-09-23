@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by alessandrozonta on 23/09/16.
@@ -45,7 +46,7 @@ public class LoadTrack {
             //list with all the path of all the trajectories of this person
             List<Path> result = new ArrayList<>();
             Path dir = Paths.get(directories[i].getAbsolutePath() + "/Trajectory");
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.{c,h,cpp,hpp,java}")) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.plt")) {
                 for (Path entry : stream) {
                     result.add(entry);
                 }
@@ -58,9 +59,9 @@ public class LoadTrack {
                 //list containing all the single line of the file
                 //in the single line of the file there are the important info
                 List<String> list = new ArrayList<>();
-                try (BufferedReader br = Files.newBufferedReader(path)) {
+                try (Stream<String> stream = Files.lines(path)) {
                     //br returns as stream and convert it into a List
-                    list = br.lines().collect(Collectors.toList());
+                    list = stream.collect(Collectors.toList());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -71,15 +72,22 @@ public class LoadTrack {
                 //the format is: latitude(decimal degrees),longitude(decimal degrees),0,altitude(feet),date(number of days since 12/30/1899),date(string),time(string)
                 //I am going to transform the string into the correct values
                 Trajectory trajectory = new Trajectory();
-                list.stream().forEach(element ->{
-                    List<String> differentElement = Arrays.asList(element.split(","));
-                    Point point = new Point(Double.parseDouble(differentElement.get(0)),Double.parseDouble(differentElement.get(1)),Double.parseDouble(differentElement.get(3)),Double.parseDouble(differentElement.get(4)),differentElement.get(5),differentElement.get(6));
-                    trajectory.addPoint(point);
-                });
+                //set first point
+                List<String> firstElement = Arrays.asList(list.get(0).split(","));
+                trajectory.setFirstPoint(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1)),Double.parseDouble(firstElement.get(3)),Double.parseDouble(firstElement.get(4)),firstElement.get(5),firstElement.get(6)));
+                //set last point
+                List<String> lastElement = Arrays.asList(list.get(list.size() -1 ).split(","));
+                trajectory.setLastPoint(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1)),Double.parseDouble(lastElement.get(3)),Double.parseDouble(lastElement.get(4)),firstElement.get(5),lastElement.get(6)));
+                //set path
+                trajectory.setPath(path.toString());
+                //set number of points
+                trajectory.setSize(list.size());
+
                 trajectories.addTrajectory(trajectory);
 
             });
         }
         return trajectories;
     }
+    
 }

@@ -3,6 +3,8 @@ package lgds.load_track;
 import lgds.trajectories.Trajectories;
 import org.junit.Test;
 
+import static org.junit.Assert.assertThat;
+
 /**
  * Created by alessandrozonta on 23/09/16.
  */
@@ -15,6 +17,7 @@ public class LoadTrackTest  {
     public void LoadTrack() throws Exception {
         LoadTrack storage = new LoadTrack();
         Trajectories tra = storage.loadTrajectories();
+
 
     }
 }
