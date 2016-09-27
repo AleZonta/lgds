@@ -35,7 +35,6 @@ public class LoadTrack {
      *
      * @return Trajectories -> class containing all the trajectories loaded
      */
-
     public Trajectories loadTrajectories(){
         Trajectories trajectories = new Trajectories();
         //load the file
@@ -89,5 +88,24 @@ public class LoadTrack {
         }
         return trajectories;
     }
-    
+
+    /**
+     * Load a specific line of the trajectory from the file
+     * @param path path of the file containing all the point of the trajectory
+     * @param position position that we have already reached
+     * @return the new point read from file
+     */
+    public Point loadTrajectory(String path, Integer position){
+        String line = null; //line that I need
+        try (Stream<String> stream = Files.lines(Paths.get(path))) {
+            //br returns as stream and convert it into a List
+            line = stream.skip(position.longValue() + 6L).findFirst().get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //set first point
+        List<String> element = Arrays.asList(line.split(","));
+        return new Point(Double.parseDouble(element.get(0)),Double.parseDouble(element.get(1)),Double.parseDouble(element.get(3)),Double.parseDouble(element.get(4)),element.get(5),element.get(6));
+    }
+
 }

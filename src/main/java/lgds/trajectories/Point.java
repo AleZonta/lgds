@@ -30,4 +30,71 @@ public class Point {
         this.time = time;
     }
 
+    /**
+     * getter for latitude
+     * @return return the latitude in double
+     */
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * getter for longitude
+     * @return return the longitude in double
+     */
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * getter for altitude
+     * @return return the altitude in double
+     */
+    public Double getAltitude() {
+        return altitude;
+    }
+
+    /**
+     * getter for date
+     * @return return the date in double
+     */
+    public Double getDated() {
+        return dated;
+    }
+
+    /**
+     * getter for date
+     * @return return the date in string
+     */
+    public String getDates() {
+        return dates;
+    }
+
+    /**
+     * getter for time
+     * @return return the time in double
+     */
+    public String getTime() {
+        return time;
+    }
+
+    /**
+     * override method equals
+     * @param o object to compare with this Point
+     * @return if the two points are the same or not
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Point)) {
+            return false;
+        }
+
+        Point point = (Point) o;
+
+        return point.time.equals(this.time) && point.dates.equals(this.dates) &&
+                point.dated.equals(this.dated) && point.altitude.equals(this.altitude) &&
+                point.latitude.equals(this.latitude) && point.longitude.equals(this.longitude);
+    }
+
 }

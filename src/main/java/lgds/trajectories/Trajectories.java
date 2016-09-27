@@ -1,6 +1,7 @@
 package lgds.trajectories;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,4 +26,20 @@ public class Trajectories {
         this.trajectories.add(trajectory);
     }
 
+    /**
+     * getter for the trajectories field
+     * @return the list with all the trajectories
+     */
+    public List<Trajectory> getTrajectories() {
+        return trajectories;
+    }
+
+    /**
+     * shuffle the list of trajectories so all the one that correspond at the same person are not all near each other
+     * shuffle in a predictive way so repetetive repetition have always the same order
+     */
+    public void shuffle(){
+
+        Collections.shuffle(this.trajectories);
+    }
 }
