@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * Created by alessandrozonta on 26/09/16.
  * This class simulate the movement of the person
  */
-public class Simulator {
+public class Simulator implements SimulatorInterface {
     private LoadTrack storage; //class that loads the track from file
     private List<Agent> participant; //list of all the agents participating into the simulation
 

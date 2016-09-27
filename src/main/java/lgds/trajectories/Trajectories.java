@@ -39,7 +39,6 @@ public class Trajectories {
      * shuffle in a predictive way so repetetive repetition have always the same order
      */
     public void shuffle(){
-
         Collections.shuffle(this.trajectories);
     }
 }

@@ -8,7 +8,7 @@ import lgds.trajectories.Trajectory;
  * Created by alessandrozonta on 26/09/16.
  * This class will implement the agent in our simulation
  */
-public class Agent {
+public class Agent implements AgentInterface{
     private final Integer id; //Id of the agent
     private final Trajectory trajectory; //Trajectory of the agent that has to follow
     private Point currentPosition; //Current position of the agent
