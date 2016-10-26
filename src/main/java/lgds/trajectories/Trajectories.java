@@ -5,6 +5,7 @@ import lgds.POI.POI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by alessandrozonta on 23/09/16.
@@ -55,7 +56,7 @@ public class Trajectories {
      * shuffle in a predictive way so repetetive repetition have always the same order
      */
     public void shuffle(){
-        Collections.shuffle(this.trajectories);
+        Collections.shuffle(this.trajectories, new Random(10));
     }
 
     /**

@@ -10,3 +10,7 @@
 *.properties
 
 *.lst
+
+*.conf
+
+.DS_Store
