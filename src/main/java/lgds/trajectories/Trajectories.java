@@ -22,6 +22,7 @@ public class Trajectories {
      */
     public Trajectories(){
         this.trajectories = new ArrayList<>();
+        this.listOfPOIs = new ArrayList<>();
     }
 
     /**

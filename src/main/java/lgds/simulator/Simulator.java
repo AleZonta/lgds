@@ -42,6 +42,8 @@ public class Simulator implements SimulatorInterface {
         Trajectories tra = this.storage.loadTrajectories();
         //shuffle it
         tra.shuffle();
+        //load with the POIs
+        tra.computePOIs(number);
         //now I am choosing only the first $number trajectories
         List<Trajectory> actualTrajectories = tra.getTrajectories().stream().limit(number).collect(Collectors.toList());
         //prepare the id of the agent
@@ -49,6 +51,7 @@ public class Simulator implements SimulatorInterface {
         for(int i = 0; i < number; i++) id.add(i);
         //create the agents
         id.stream().forEach(integer -> this.participant.add(new Agent(integer, actualTrajectories.get(integer), this.storage)));
+
     }
 
 

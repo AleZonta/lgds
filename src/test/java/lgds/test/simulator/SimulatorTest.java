@@ -28,5 +28,6 @@ public class SimulatorTest {
         Simulator sim = new Simulator();
         sim.init(5);
         assertEquals(5,sim.getParticipant().size());
+
     }
 }
