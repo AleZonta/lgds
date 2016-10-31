@@ -49,6 +49,9 @@ public class LoadTrack {
     /**
      * Scan the folder (hardcoded location) and load in memory all the trajectories
      * This method is specific for the Geolife Trajectories 1.3 download data
+<<<<<<< HEAD
+>>>>>>> parent of c004689... Added POI and world dimensions
+=======
 >>>>>>> parent of c004689... Added POI and world dimensions
      * Every subfolder is a different person
      * Every person has a folder trajectory containing all his trajectories

@@ -3,6 +3,7 @@
 
 *.xml
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 *.txt
 
@@ -15,5 +16,7 @@
 *.conf
 
 .DS_Store
+=======
+>>>>>>> parent of c004689... Added POI and world dimensions
 =======
 >>>>>>> parent of c004689... Added POI and world dimensions

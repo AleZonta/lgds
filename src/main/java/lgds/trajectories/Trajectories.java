@@ -40,6 +40,10 @@ public class Trajectories {
      * shuffle in a predictive way so repetetive repetition have always the same order
      */
     public void shuffle(){
+<<<<<<< HEAD
         Collections.shuffle(this.trajectories, new Random(10));
+=======
+        Collections.shuffle(this.trajectories);
+>>>>>>> parent of c004689... Added POI and world dimensions
     }
 }
