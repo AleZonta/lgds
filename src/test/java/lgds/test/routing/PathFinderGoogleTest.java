@@ -51,9 +51,6 @@ public class PathFinderGoogleTest {
         LatLng des = new LatLng(52.320891,4.875542);
         pf.getDirection(sour,des);
         assertNotNull(pf.getDirection().routes);
-
-        pf.getDirection(new Point(null,null),new Point(null,null));
-        assertNull(pf.getDirection());
     }
 
     /**

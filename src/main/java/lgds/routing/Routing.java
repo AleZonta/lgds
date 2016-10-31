@@ -27,6 +27,9 @@ public interface Routing {
      */
     Double retTotalDistance();
 
-
+    /**
+    * Return the center point of the trajectory
+    */
+    Point getCenterPointOfTrajectory();
 
 }

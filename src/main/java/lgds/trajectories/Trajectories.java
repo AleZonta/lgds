@@ -49,6 +49,14 @@ public class Trajectories {
     }
 
     /**
+     * getter for the list of POIS
+     * @return the list of POIs
+     */
+    public List<POI> getListOfPOIs() {
+        return this.listOfPOIs;
+    }
+
+    /**
      * Compute the list of POIs from the trajectories.
      * Every destinations are POIs
      * @param number number of trace that I am considering

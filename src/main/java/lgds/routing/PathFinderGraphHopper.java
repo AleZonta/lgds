@@ -32,7 +32,7 @@ public class PathFinderGraphHopper implements Routing{
      * Set the paths for the folder and the osmFile
      */
     public PathFinderGraphHopper(){
-        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source.conf";
+        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source3.conf";
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(path));
             String source = brTest.readLine();
@@ -120,6 +120,7 @@ public class PathFinderGraphHopper implements Routing{
      * Hack for idsa
      * @return lgds Point
      */
+    @Override
     public Point getCenterPointOfTrajectory(){
         return new Point(this.rsp.getBest().getPoints().getLatitude(this.rsp.getBest().getPoints().size()/2),this.rsp.getBest().getPoints().getLongitude(this.rsp.getBest().getPoints().size()/2));
     }

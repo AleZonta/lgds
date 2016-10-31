@@ -134,6 +134,7 @@ public class PathFinderGoogle implements Routing {
      * Hack for idsa
      * @return lgds Point
      */
+    @Override
     public Point getCenterPointOfTrajectory(){
         List<DirectionsStep> res = this.retDirectionStep();
         if(res != null){

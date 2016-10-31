@@ -30,7 +30,7 @@ public class LoadTrack implements Traces {
      * Load position trajectories reading the path from file
      */
     public LoadTrack(){
-        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source.conf";
+        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source2.conf";
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(path));
             this.source = brTest.readLine();
