@@ -4,6 +4,7 @@ import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.routing.util.EncodingManager;
+import com.graphhopper.util.shapes.BBox;
 import lgds.trajectories.Point;
 
 import java.io.BufferedReader;
@@ -23,6 +24,7 @@ public class PathFinderGraphHopper implements Routing{
     private File graphLocation; //location of graphHopper
     private GraphHopper hopper; //Instance for the path finder
     private GHResponse rsp; //Response for the path
+    private BBox bounds; //Bounds of the map
 
 
     /**
@@ -68,6 +70,9 @@ public class PathFinderGraphHopper implements Routing{
         // now this can take minutes if it imports or a few seconds for loading
         // of course this is dependent on the area you import
         this.hopper.importOrLoad();
+
+        //retrieve bounds of the loaded maps
+        this.bounds = this.hopper.getGraphHopperStorage().getBaseGraph().getBounds();
     }
 
     /**
@@ -86,18 +91,28 @@ public class PathFinderGraphHopper implements Routing{
      */
     @Override
     public void getDirection(Point source, Point destination) {
-        // simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
-        GHRequest req = new GHRequest(source.getLatitude(), source.getLongitude(), destination.getLatitude(), destination.getLongitude()).
-                setWeighting("fastest").
-                setVehicle("car").
-                setLocale(Locale.US);
-        this.rsp = this.hopper.route(req);
+        //Check if source and destination are inside the bounds of the maps
+        if (this.bounds.contains(source.getLatitude(), source.getLongitude())){
+            if (this.bounds.contains(destination.getLatitude(), destination.getLongitude())){
+                // simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
+                GHRequest req = new GHRequest(source.getLatitude(), source.getLongitude(), destination.getLatitude(), destination.getLongitude()).
+                        setWeighting("fastest").
+                        setVehicle("car").
+                        setLocale(Locale.US);
+                this.rsp = this.hopper.route(req);
 
-        // first check for errors
-        if(rsp.hasErrors()) {
-            // handle them!
+                // first check for errors
+                if(rsp.hasErrors()) {
+                    // handle them!
+                    this.rsp = null;
+                }
+            }else{
+                this.rsp = null;
+            }
+        }else{
             this.rsp = null;
         }
+
     }
 
     /**

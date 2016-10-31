@@ -48,6 +48,11 @@ public class PathFinderGraphHopperTest {
         Point destination = new Point(39.923964,116.365135);
         pf.getDirection(source,destination);
         assertNotNull(pf.getRsp());
+        //If point outside the map how can I check this?
+        source = new Point(0.0,0.0);
+        destination = new Point(0.0,0.0);
+        pf.getDirection(source,destination);
+        assertNull(pf.getRsp());
     }
 
 }

@@ -24,3 +24,19 @@
 beijing_china.osm.pbf
 
 china-latest.osm.pbf
+
+osm/shortcuts_fastest_car
+
+osm/edges
+
+osm/geometry
+
+osm/location_index
+
+osm/names
+
+osm/nodes
+
+osm/nodes_ch_fastest_car
+
+osm/properties
