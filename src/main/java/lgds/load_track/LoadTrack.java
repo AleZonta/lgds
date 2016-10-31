@@ -6,6 +6,7 @@ import lgds.trajectories.Trajectory;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -21,11 +22,24 @@ import java.util.stream.Stream;
  * Created by alessandrozonta on 23/09/16.
  * This class loads the trajectories from a file
  */
-public class LoadTrack {
-    private String source = "/Users/alessandrozonta/Downloads/Geolife trajectories 1.3/Data"; //location of the gps data
+public class LoadTrack implements Traces {
+    private String source; //location of the gps data
 
     /**
-     * Scan the folder (hardcoded location) and load in memory all the trajectories
+     * Load position trajectories reading the path from file
+     */
+    public LoadTrack(){
+        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source.conf";
+        try {
+            BufferedReader brTest = new BufferedReader(new FileReader(path));
+            this.source = brTest.readLine();
+        } catch (IOException e) {
+            this.source = null;
+        }
+    }
+
+    /**
+     * Scan the folder (location read from a file) and load in memory all the trajectories
      * This method is specific for the Geolife trajectories 1.3 download data
      * Every subfolder is a different person
      * Every person has a folder trajectory containing all his trajectories
