@@ -1,11 +1,8 @@
 package lgds.people;
 
-import lgds.POI.POI;
 import lgds.load_track.LoadTrack;
 import lgds.trajectories.Point;
 import lgds.trajectories.Trajectory;
-
-import java.util.List;
 
 /**
  * Created by alessandrozonta on 26/09/16.
@@ -51,7 +48,4 @@ public class Agent implements AgentInterface{
     public Boolean getDead() {
         return dead;
     }
-
-
-
 }

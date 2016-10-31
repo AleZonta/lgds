@@ -22,6 +22,7 @@ import java.util.stream.Stream;
  * Created by alessandrozonta on 23/09/16.
  * This class loads the trajectories from a file
  */
+<<<<<<< HEAD
 public class LoadTrack implements Traces {
     private String source; //location of the gps data
 
@@ -41,22 +42,26 @@ public class LoadTrack implements Traces {
     /**
      * Scan the folder (location read from a file) and load in memory all the trajectories
      * This method is specific for the Geolife trajectories 1.3 download data
+=======
+public class LoadTrack {
+    private String source = "/Users/alessandrozonta/Downloads/Geolife Trajectories 1.3/Data"; //location of the gps data
+
+    /**
+     * Scan the folder (hardcoded location) and load in memory all the trajectories
+     * This method is specific for the Geolife Trajectories 1.3 download data
+>>>>>>> parent of c004689... Added POI and world dimensions
      * Every subfolder is a different person
      * Every person has a folder trajectory containing all his trajectories
      * Every files is a trajectory track
      * This method will load all the trajectories of one person in more trajectories from more people
      * Check User Guide pdf file to learn how the trajectories are saved
-     * it also calculate the root of the word and its height and width
      *
-     * @return trajectories -> class containing all the trajectories loaded
+     * @return Trajectories -> class containing all the trajectories loaded
      */
     public Trajectories loadTrajectories(){
         Trajectories trajectories = new Trajectories();
         //load the file
         File sourceFile = new File(this.source);
-        //initialise to zero the value for the root and height and width
-        Point minValue = new Point(Double.MAX_VALUE,Double.MAX_VALUE);
-        Point maxValue = new Point(Double.MIN_VALUE,Double.MIN_VALUE);
         //find all the subdirectories
         File[] directories = sourceFile.listFiles(File::isDirectory);
         for(int i = 0; i < directories.length; i++){
@@ -100,22 +105,10 @@ public class LoadTrack implements Traces {
                 //set number of points
                 trajectory.setSize(list.size());
 
-                //determine geo bounding box
-                list.stream().forEach(s -> {
-                    List<String> el = Arrays.asList(s.split(","));
-                    Double lat = Double.parseDouble(el.get(0));
-                    Double lon = Double.parseDouble(el.get(1));
-                    minValue.setLatitude(Math.min(minValue.getLatitude(), lat));
-                    minValue.setLongitude(Math.min(minValue.getLongitude(), lon));
-                    maxValue.setLatitude(Math.max(maxValue.getLatitude(), lat));
-                    maxValue.setLongitude(Math.max(maxValue.getLongitude(), lon));
-                });
-
                 trajectories.addTrajectory(trajectory);
 
             });
         }
-        trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
         return trajectories;
     }
 
@@ -137,7 +130,5 @@ public class LoadTrack implements Traces {
         List<String> element = Arrays.asList(line.split(","));
         return new Point(Double.parseDouble(element.get(0)),Double.parseDouble(element.get(1)),Double.parseDouble(element.get(3)),Double.parseDouble(element.get(4)),element.get(5),element.get(6));
     }
-
-
 
 }

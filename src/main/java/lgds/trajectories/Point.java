@@ -5,8 +5,8 @@ package lgds.trajectories;
  * This class contains the single point of a trajectory
  */
 public class Point {
-    private Double latitude;
-    private Double longitude;
+    private final Double latitude;
+    private final Double longitude;
     private final Double altitude;
     private final Double dated;
     private final String dates;
@@ -31,20 +31,6 @@ public class Point {
     }
 
     /**
-     * Constructor with only two parameters
-     * @param latitude latitude in decimal degrees of this point
-     * @param longitude longitude in decimal degrees of this point
-     */
-    public Point(Double latitude, Double longitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.altitude = null;
-        this.dated = null;
-        this.dates = null;
-        this.time = null;
-    }
-
-    /**
      * getter for latitude
      * @return return the latitude in double
      */
@@ -53,27 +39,11 @@ public class Point {
     }
 
     /**
-     * setter for latitude
-     * @param latitude in double
-     */
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    /**
      * getter for longitude
      * @return return the longitude in double
      */
     public Double getLongitude() {
         return longitude;
-    }
-
-    /**
-     * setter for longitude
-     * @param longitude in double
-     */
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
     }
 
     /**

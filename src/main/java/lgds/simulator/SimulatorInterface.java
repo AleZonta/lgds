@@ -1,6 +1,8 @@
 package lgds.simulator;
 
-import lgds.trajectories.Trajectories;
+import lgds.people.Agent;
+
+import java.util.List;
 
 /**
  * Created by alessandrozonta on 27/09/16.
@@ -9,10 +11,10 @@ import lgds.trajectories.Trajectories;
 public interface SimulatorInterface {
 
     /**
-     * getter for all the trajectories
-     * @return all the trajectories
+     * getter for the agent participating at the simulation
+     * @return list of agent that I am going to simulate
      */
-    Trajectories getTra();
+    List<Agent> getParticipant();
 
     /**
      * Initialise the class loading all the tracks from file and building the list of Agent

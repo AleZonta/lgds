@@ -27,7 +27,6 @@ public class SimulatorTest {
     public void init() throws Exception{
         Simulator sim = new Simulator();
         sim.init(40);
-        assertEquals(40, sim.getParticipant().size());
-        assertEquals(40, sim.getTra().getListOfPOIs().size());
+        assertEquals(40,sim.getParticipant().size());
     }
 }
