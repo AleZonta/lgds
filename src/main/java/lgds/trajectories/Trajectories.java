@@ -1,5 +1,7 @@
 package lgds.trajectories;
 
+import lgds.POI.POI;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +13,9 @@ import java.util.Random;
  */
 public class Trajectories {
     private List<Trajectory> trajectories; // all the trajectories
+    private List<POI> listOfPOIs; //list of all the POIs
+    private Point utmRoot; //root of the word
+    private Point whWorld; // width and height of the word
 
     /**
      * Default constructor
@@ -40,10 +45,41 @@ public class Trajectories {
      * shuffle in a predictive way so repetetive repetition have always the same order
      */
     public void shuffle(){
-<<<<<<< HEAD
         Collections.shuffle(this.trajectories, new Random(10));
-=======
-        Collections.shuffle(this.trajectories);
->>>>>>> parent of c004689... Added POI and world dimensions
+    }
+
+    /**
+     * Compute the list of POIs from the trajectories.
+     * Every destinations are POIs
+     * @param number number of trace that I am considering
+     */
+    public void computePOIs(Integer number){
+        this.trajectories.stream().limit(number).forEach(trajectory -> listOfPOIs.add(new POI(trajectory.getLastPoint())));
+    }
+
+    /**
+     * set the root of the word and its dimension
+     * @param utmRoot root coordinate of the origin of the word
+     * @param whWorld width and height of the word
+     */
+    public void setRootAndWhWorld(Point utmRoot, Point whWorld){
+        this.utmRoot = utmRoot;
+        this.whWorld = whWorld;
+    }
+
+    /**
+     * getter for the root coordinate
+     * @return root coordinate
+     */
+    public Point getUtmRoot() {
+        return utmRoot;
+    }
+
+    /**
+     * getter for the dimension of the world
+     * @return the dimension of the world in a Point object
+     */
+    public Point getWhWorld() {
+        return whWorld;
     }
 }

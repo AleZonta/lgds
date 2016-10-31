@@ -6,6 +6,7 @@ import lgds.trajectories.Trajectory;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -21,29 +22,27 @@ import java.util.stream.Stream;
  * Created by alessandrozonta on 23/09/16.
  * This class loads the trajectories from a file
  */
-<<<<<<< HEAD
-<<<<<<< HEAD
 public class LoadTrack implements Traces {
     private String source; //location of the gps data
-=======
-public class LoadTrack {
-    private String source = "/Users/alessandrozonta/Downloads/Geolife trajectories 1.3/Data"; //location of the gps data
->>>>>>> parent of b3857dd... Class load idsa traces
+
+    /**
+     * Scan the folder (hardcoded location) and load in memory all the trajectories
+     * Load position trajectories reading the path from file
+     */
+    public LoadTrack(){
+        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source.conf";
+        try {
+            BufferedReader brTest = new BufferedReader(new FileReader(path));
+            this.source = brTest.readLine();
+        } catch (IOException e) {
+            this.source = null;
+        }
+    }
+
 
     /**
      * Scan the folder (hardcoded location) and load in memory all the trajectories
      * This method is specific for the Geolife trajectories 1.3 download data
-=======
-public class LoadTrack {
-    private String source = "/Users/alessandrozonta/Downloads/Geolife Trajectories 1.3/Data"; //location of the gps data
-
-    /**
-     * Scan the folder (hardcoded location) and load in memory all the trajectories
-     * This method is specific for the Geolife Trajectories 1.3 download data
-<<<<<<< HEAD
->>>>>>> parent of c004689... Added POI and world dimensions
-=======
->>>>>>> parent of c004689... Added POI and world dimensions
      * Every subfolder is a different person
      * Every person has a folder trajectory containing all his trajectories
      * Every files is a trajectory track
@@ -56,6 +55,9 @@ public class LoadTrack {
         Trajectories trajectories = new Trajectories();
         //load the file
         File sourceFile = new File(this.source);
+        //initialise to zero the value for the root and height and width
+        Point minValue = new Point(Double.MAX_VALUE,Double.MAX_VALUE);
+        Point maxValue = new Point(Double.MIN_VALUE,Double.MIN_VALUE);
         //find all the subdirectories
         File[] directories = sourceFile.listFiles(File::isDirectory);
         for(int i = 0; i < directories.length; i++){
@@ -99,6 +101,18 @@ public class LoadTrack {
                 //set number of points
                 trajectory.setSize(list.size());
 
+                //determine geo bounding box
+                list.stream().forEach(s -> {
+                    List<String> el = Arrays.asList(s.split(","));
+                    Double lat = Double.parseDouble(el.get(0));
+                    Double lon = Double.parseDouble(el.get(1));
+                    minValue.setLatitude(Math.min(minValue.getLatitude(), lat));
+                    minValue.setLongitude(Math.min(minValue.getLongitude(), lon));
+                    maxValue.setLatitude(Math.max(maxValue.getLatitude(), lat));
+                    maxValue.setLongitude(Math.max(maxValue.getLongitude(), lon));
+                });
+
+                trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
                 trajectories.addTrajectory(trajectory);
 
             });

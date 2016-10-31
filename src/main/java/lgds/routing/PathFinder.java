@@ -4,6 +4,7 @@ package lgds.routing;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.*;
+import lgds.trajectories.Point;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ import static java.awt.SystemColor.text;
  * Created by alessandrozonta on 28/09/16.
  * Class that loads the path finder system with the map of the place
  */
-public class PathFinder {
+public class PathFinder implements Routing {
     private GeoApiContext context; //context of the Google API
     private DirectionsResult direction; //the last direction found
 
@@ -47,7 +48,7 @@ public class PathFinder {
     /**
      * Load Google services for the path planning
      */
-    private void load(){
+    public void load(){
         String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/config.conf";
         BufferedReader brTest = null;
         String apiKey = "";
@@ -100,5 +101,42 @@ public class PathFinder {
         return null;
     }
 
+    /**
+     * Method that return the direction from source to destination
+     * @param latSource lat source of the trajectory
+     * @param lngSource lng source of the trajectory
+     * @param latDest lat destination of the trajectory
+     * @param lngDest lng destination of the trajectory
+     */
+    public void getDirection(Double latSource, Double lngSource, Double latDest, Double lngDest){
+        LatLng sour = new LatLng(latSource,lngSource);
+        LatLng des = new LatLng(latDest,lngDest);
+        this.getDirection(sour, des);
+    }
+
+    /**
+     * Method that return the direction from source to destination
+     * @param source source for the trajectory
+     * @param destination destination of the trajectory
+     */
+    public void getDirection(Point source, Point destination){
+        LatLng sour = new LatLng(source.getLatitude(), source.getLongitude());
+        LatLng des = new LatLng(destination.getLatitude(), destination.getLongitude());
+        this.getDirection(sour, des);
+    }
+
+    /**
+     * Return the center point of the trajectory
+     * Hack for idsa
+     * @return lgds Point
+     */
+    public Point getCenterPointOfTrajectory(){
+        List<DirectionsStep> res = this.retDirectionStep();
+        if(res != null){
+            return new Point(res.get(res.size() / 2).startLocation.lat,res.get(res.size() / 2).startLocation.lng);
+        }else{
+            return null;
+        }
+    }
 
 }

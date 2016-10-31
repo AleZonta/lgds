@@ -3,6 +3,7 @@ package lgds.test.routing;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.LatLng;
 import lgds.routing.PathFinder;
+import lgds.trajectories.Point;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -52,7 +53,7 @@ public class PathFinderTest {
         pf.getDirection(sour,des);
         assertNotNull(pf.getDirection().routes);
 
-        pf.getDirection(null,null);
+        pf.getDirection(new Point(null,null),new Point(null,null));
         assertNull(pf.getDirection());
     }
 
