@@ -19,15 +19,16 @@ import static java.awt.SystemColor.text;
 /**
  * Created by alessandrozonta on 28/09/16.
  * Class that loads the path finder system with the map of the place
+ * It uses Google API
  */
-public class PathFinder implements Routing {
+public class PathFinderGoogle implements Routing {
     private GeoApiContext context; //context of the Google API
     private DirectionsResult direction; //the last direction found
 
     /**
      * Constructor that initialise the connection with Google API
      */
-    public PathFinder(){
+    public PathFinderGoogle(){
         this.load();
     }
 
@@ -48,6 +49,7 @@ public class PathFinder implements Routing {
     /**
      * Load Google services for the path planning
      */
+    @Override
     public void load(){
         String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/config.conf";
         BufferedReader brTest = null;
@@ -78,6 +80,7 @@ public class PathFinder implements Routing {
      * Method that return the total distance of the trajectory found
      * @return Double value of the distance in metres
      */
+    @Override
     public Double retTotalDistance(){
         if(this.direction != null) {
             return (double) this.direction.routes[0].legs[0].distance.inMeters;
@@ -119,6 +122,7 @@ public class PathFinder implements Routing {
      * @param source source for the trajectory
      * @param destination destination of the trajectory
      */
+    @Override
     public void getDirection(Point source, Point destination){
         LatLng sour = new LatLng(source.getLatitude(), source.getLongitude());
         LatLng des = new LatLng(destination.getLatitude(), destination.getLongitude());

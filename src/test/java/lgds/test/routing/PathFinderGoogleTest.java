@@ -1,8 +1,7 @@
 package lgds.test.routing;
 
-import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.LatLng;
-import lgds.routing.PathFinder;
+import lgds.routing.PathFinderGoogle;
 import lgds.trajectories.Point;
 import org.junit.Test;
 
@@ -11,14 +10,14 @@ import static org.junit.Assert.*;
 /**
  * Created by alessandrozonta on 28/09/16.
  */
-public class PathFinderTest {
+public class PathFinderGoogleTest {
     /**
      * test if it returns the list of the steps to go from source to destination
      * @throws Exception
      */
     @Test
     public void retDirectionStep() throws Exception {
-        PathFinder pf = new PathFinder();
+        PathFinderGoogle pf = new PathFinderGoogle();
         assertNull(pf.retDirectionStep());
         LatLng sour = new LatLng(52.333636,4.869611);
         LatLng des = new LatLng(52.320891,4.875542);
@@ -32,7 +31,7 @@ public class PathFinderTest {
      */
     @Test
     public void retTotalDistance() throws Exception {
-        PathFinder pf = new PathFinder();
+        PathFinderGoogle pf = new PathFinderGoogle();
         assertNull(pf.retTotalDistance());
         LatLng sour = new LatLng(52.333636,4.869611);
         LatLng des = new LatLng(52.320891,4.875542);
@@ -46,7 +45,7 @@ public class PathFinderTest {
      */
     @Test
     public void getDirection() throws Exception {
-        PathFinder pf = new PathFinder();
+        PathFinderGoogle pf = new PathFinderGoogle();
         assertNull(pf.getDirection());
         LatLng sour = new LatLng(52.333636,4.869611);
         LatLng des = new LatLng(52.320891,4.875542);
@@ -63,7 +62,7 @@ public class PathFinderTest {
      */
     @Test
     public void load() throws Exception {
-        PathFinder pf = new PathFinder();
+        PathFinderGoogle pf = new PathFinderGoogle();
         assertNotNull(pf.getContext());
     }
 
