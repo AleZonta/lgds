@@ -4,6 +4,7 @@ package lgds.routing;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.*;
+import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
 
 import java.io.BufferedReader;
@@ -51,16 +52,17 @@ public class PathFinderGoogle implements Routing {
      */
     @Override
     public void load(){
-        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/config.conf";
-        BufferedReader brTest = null;
+        // load config file
+        ConfigFile conf = new ConfigFile();
         String apiKey = "";
         try {
-            brTest = new BufferedReader(new FileReader(path));
-            apiKey = brTest.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+            conf.loadFile();
+            apiKey = conf.getGoogleAPIKey();
+            this.context = new GeoApiContext().setApiKey(apiKey);
+        } catch (Exception e){
+            this.context = null;
         }
-        this.context = new GeoApiContext().setApiKey(apiKey);
+
     }
 
     /**
@@ -142,6 +144,14 @@ public class PathFinderGoogle implements Routing {
         }else{
             return null;
         }
+    }
+
+    /**
+     * Check if the POI is included into the boundary
+     */
+    @Override
+    public Boolean isContained(Point point){
+        return Boolean.TRUE;
     }
 
 }

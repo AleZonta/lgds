@@ -32,4 +32,9 @@ public interface Routing {
     */
     Point getCenterPointOfTrajectory();
 
+    /**
+     * Check if the POI is included into the boundary
+     */
+    Boolean isContained(Point point);
+
 }

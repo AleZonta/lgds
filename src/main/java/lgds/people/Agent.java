@@ -1,6 +1,7 @@
 package lgds.people;
 
 import lgds.load_track.LoadTrack;
+import lgds.load_track.Traces;
 import lgds.trajectories.Point;
 import lgds.trajectories.Trajectory;
 
@@ -12,7 +13,7 @@ public class Agent implements AgentInterface{
     private final Integer id; //Id of the agent
     private final Trajectory trajectory; //Trajectory of the agent that has to follow
     private Point currentPosition; //Current position of the agent
-    private LoadTrack storage; //agent needs this to load his next position
+    private Traces storage; //agent needs this to load his next position
     private Boolean dead; //true if it ends to move on the trajectory
 
     /**
@@ -21,7 +22,7 @@ public class Agent implements AgentInterface{
      * @param trajectory agent's trajectory that it will follow
      * @param storage class used to load the next position
      */
-    public Agent(Integer id, Trajectory trajectory, LoadTrack storage){
+    public Agent(Integer id, Trajectory trajectory, Traces storage){
         this.id = id;
         this.trajectory = trajectory;
         this.currentPosition = null;
@@ -47,5 +48,9 @@ public class Agent implements AgentInterface{
      */
     public Boolean getDead() {
         return dead;
+    }
+
+    public Point getCurrentPosition() {
+        return currentPosition;
     }
 }

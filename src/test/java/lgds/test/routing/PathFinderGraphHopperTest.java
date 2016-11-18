@@ -55,4 +55,16 @@ public class PathFinderGraphHopperTest {
         assertNull(pf.getRsp());
     }
 
+
+    @Test
+    public void isContained() throws Exception {
+        PathFinderGraphHopper pf = new PathFinderGraphHopper();
+        pf.load();
+        Point source = new Point(39.937887,116.433688);
+        assertEquals(Boolean.TRUE, pf.isContained(source));
+        Point destination = new Point(13.370826, 104.853356);
+        assertEquals(Boolean.FALSE, pf.isContained(destination));
+
+    }
+
 }

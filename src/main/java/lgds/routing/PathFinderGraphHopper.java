@@ -3,16 +3,17 @@ package lgds.routing;
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
+import com.graphhopper.PathWrapper;
 import com.graphhopper.routing.util.EncodingManager;
+import com.graphhopper.util.PointList;
 import com.graphhopper.util.shapes.BBox;
+import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Paths;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Created by alessandrozonta on 31/10/2016.
@@ -26,19 +27,18 @@ public class PathFinderGraphHopper implements Routing{
     private GHResponse rsp; //Response for the path
     private BBox bounds; //Bounds of the map
 
-
     /**
      * constructor of the class
      * Set the paths for the folder and the osmFile
      */
     public PathFinderGraphHopper(){
-        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source3.conf";
+        // load config file
+        ConfigFile conf = new ConfigFile();
         try {
-            BufferedReader brTest = new BufferedReader(new FileReader(path));
-            String source = brTest.readLine();
-            this.osmFile = new File(source,"beijing_china.osm.pbf");
-            this.graphLocation = new File(source,"osm");
-        } catch (IOException e) {
+            conf.loadFile();
+            this.osmFile = new File(conf.getGraphHopperPath(), conf.getGraphHopperName());
+            this.graphLocation = new File(conf.getGraphHopperPath(),"osm");
+        } catch (Exception e){
             this.osmFile = null;
             this.graphLocation = null;
         }
@@ -81,7 +81,23 @@ public class PathFinderGraphHopper implements Routing{
      */
     @Override
     public Double retTotalDistance() {
-        return this.rsp.getBest().getDistance();
+        try {
+            if (this.rsp == null){
+                return null;
+            }
+            return this.rsp.getBest().getDistance();
+        }catch (Exception e){
+            System.out.print(e.getLocalizedMessage());
+            System.out.print("\n");
+            System.out.print(this.rsp.getAll().size());
+            System.out.print("\n");
+            System.out.print(this.rsp.getDebugInfo());
+            System.out.print("\n");
+            System.out.print(this.rsp.toString());
+            System.out.print("\n");
+            return 999999.0;
+
+        }
     }
 
     /**
@@ -92,8 +108,8 @@ public class PathFinderGraphHopper implements Routing{
     @Override
     public void getDirection(Point source, Point destination) {
         //Check if source and destination are inside the bounds of the maps
-        if (this.bounds.contains(source.getLatitude(), source.getLongitude())){
-            if (this.bounds.contains(destination.getLatitude(), destination.getLongitude())){
+        if (this.bounds.contains(source.getLatitude(), source.getLongitude())) {
+            if (this.bounds.contains(destination.getLatitude(), destination.getLongitude())) {
                 // simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
                 GHRequest req = new GHRequest(source.getLatitude(), source.getLongitude(), destination.getLatitude(), destination.getLongitude()).
                         setWeighting("fastest").
@@ -102,18 +118,29 @@ public class PathFinderGraphHopper implements Routing{
                 this.rsp = this.hopper.route(req);
 
                 // first check for errors
-                if(rsp.hasErrors()) {
-                    // handle them!
-                    this.rsp = null;
+                if (this.rsp.hasErrors()) {
+                    //I know two different errors
+                    //Connection between locations not found
+                    //Cannot find point
+                    PathWrapper wr = new PathWrapper();
+                    wr.setDistance(99999999.0);
+                    PointList list = new PointList();
+                    list.add(0.0,0.0);
+                    list.add((source.getLatitude() + destination.getLatitude())/2,(source.getLongitude() + destination.getLongitude())/2);
+                    list.add(0.0,0.0);
+                    wr.setPoints(list);
+                    this.rsp = new GHResponse();
+                    this.rsp.add(wr);
                 }
-            }else{
+            } else {
                 this.rsp = null;
             }
-        }else{
+        } else {
             this.rsp = null;
         }
-
     }
+
+
 
     /**
      * Return the center point of the trajectory
@@ -124,4 +151,17 @@ public class PathFinderGraphHopper implements Routing{
     public Point getCenterPointOfTrajectory(){
         return new Point(this.rsp.getBest().getPoints().getLatitude(this.rsp.getBest().getPoints().size()/2),this.rsp.getBest().getPoints().getLongitude(this.rsp.getBest().getPoints().size()/2));
     }
+
+
+    /**
+     * Check if the POI is included into the boundary
+     */
+    @Override
+    public Boolean isContained(Point point){
+        if( this.bounds.contains(point.getLatitude(), point.getLongitude())){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 }
+

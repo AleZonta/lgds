@@ -1,5 +1,6 @@
 package lgds.load_track;
 
+import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
 import lgds.trajectories.Trajectories;
 import lgds.trajectories.Trajectory;
@@ -30,11 +31,12 @@ public class LoadTrack implements Traces {
      * Load position trajectories reading the path from file
      */
     public LoadTrack(){
-        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source2.conf";
+        // load config file
+        ConfigFile conf = new ConfigFile();
         try {
-            BufferedReader brTest = new BufferedReader(new FileReader(path));
-            this.source = brTest.readLine();
-        } catch (IOException e) {
+            conf.loadFile();
+            this.source = conf.getGeoLifeTrace();
+        } catch (Exception e){
             this.source = null;
         }
     }
@@ -90,6 +92,8 @@ public class LoadTrack implements Traces {
                 //the format is: latitude(decimal degrees),longitude(decimal degrees),0,altitude(feet),date(number of days since 12/30/1899),date(string),time(string)
                 //I am going to transform the string into the correct values
                 Trajectory trajectory = new Trajectory();
+                //set full loaded to true
+                trajectory.setFullLoad(Boolean.FALSE);
                 //set first point
                 List<String> firstElement = Arrays.asList(list.get(0).split(","));
                 trajectory.setFirstPoint(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1)),Double.parseDouble(firstElement.get(3)),Double.parseDouble(firstElement.get(4)),firstElement.get(5),firstElement.get(6)));

@@ -1,6 +1,7 @@
 package lgds.trajectories;
 
 import lgds.load_track.LoadTrack;
+import lgds.load_track.Traces;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Trajectory {
     private Integer size; //size of the trajectory
     private Integer currentReadPosition; //current position reached reading the file with the trajectory
     private Boolean reachEndFile; //have I reached the end of the file?
+    private Boolean fullLoad; //If true the trajectory is full loaded otherwise not
 
     /**
      * Default constructor
@@ -93,16 +95,22 @@ public class Trajectory {
      * @return the Point with the next position
      * @param storage storage class that read the info from file. It is null if I reached the end of the track
      */
-    public Point getNextPoint(LoadTrack storage){
+    public Point getNextPoint(Traces storage){
         //If there is no point anymore I have to signal that I ended my job
         if(this.reachEndFile) return null;
         this.currentReadPosition++;
-        Point point = storage.loadTrajectory(this.path,this.currentReadPosition);
+        //if fullLoad is true I do not need to load from file but only read next position
+        Point point;
+        if (this.fullLoad){
+            point = this.points.get(this.currentReadPosition);
+        }else{
+            point = storage.loadTrajectory(this.path, this.currentReadPosition);
+            this.points.add(point);
+        }
         //check if I reach the end
         if (point.equals(this.lastPoint)){
             this.reachEndFile = Boolean.TRUE;
         }
-        this.points.add(point);
         return point;
     }
 
@@ -112,5 +120,13 @@ public class Trajectory {
      */
     public Integer getCurrentReadPosition() {
         return currentReadPosition;
+    }
+
+    /**
+     * setter for fullLoad
+     * @param fullLoad True if The trajectory is loaded entirely. False if it will be incremental loading
+     */
+    public void setFullLoad(Boolean fullLoad) {
+        this.fullLoad = fullLoad;
     }
 }

@@ -1,12 +1,10 @@
 package lgds.load_track;
 
+import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
 import lgds.trajectories.Trajectories;
 import lgds.trajectories.Trajectory;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,13 +25,15 @@ public class LoadIDSATrack implements Traces {
      * Load position trajectories reading the path from file
      */
     public LoadIDSATrack(){
-        String path = Paths.get(".").toAbsolutePath().normalize().toString() + "/source.conf";
+        // load config file
+        ConfigFile conf = new ConfigFile();
         try {
-            BufferedReader brTest = new BufferedReader(new FileReader(path));
-            this.source = brTest.readLine();
-        } catch (IOException e) {
+            conf.loadFile();
+            this.source = conf.getIDSATraces();
+        } catch (Exception e){
             this.source = null;
         }
+
     }
 
     /**
@@ -46,12 +46,11 @@ public class LoadIDSATrack implements Traces {
      */
     public Trajectories loadTrajectories(){
         Trajectories trajectories = new Trajectories();
-        //load the file
-        File sourceFile = new File(this.source);
         //initialise to zero the value for the root and height and width
         Point minValue = new Point(Double.MAX_VALUE,Double.MAX_VALUE);
         Point maxValue = new Point(Double.MIN_VALUE,Double.MIN_VALUE);
 
+        Point root = new Point(588636.0471215437, 5763563.815469695);
 
         final Integer[] count = {0};
         //read file into stream, try-with-resources
@@ -63,13 +62,28 @@ public class LoadIDSATrack implements Traces {
 
                     //I am going to transform the string into the correct values
                     Trajectory trajectory = new Trajectory();
+                    //set full loaded to true
+                    trajectory.setFullLoad(Boolean.TRUE);
                     //set first point
                     List<String> firstElement = Arrays.asList(splittedList.get(0).split(","));
-                    trajectory.setFirstPoint(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1))));
+                    trajectory.setFirstPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1))), root));
+
+                    //Remove the first trajectory
+                    splittedList = splittedList.subList(1, splittedList.size());
+                    splittedList.stream().forEach(el -> {
+                        if(!Objects.equals(el, " ")) {
+                            List<String> elements = Arrays.asList(el.split(","));
+                            try {
+                                trajectory.addPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(elements.get(0)), Double.parseDouble(elements.get(1))), root));
+                            } catch (Exception e) {
+                                String a = "";
+                            }
+                        }
+                    });
 
                     //set last point
                     List<String> lastElement = Arrays.asList(splittedList.get(splittedList.size() - 2).split(","));
-                    trajectory.setLastPoint(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1))));
+                    trajectory.setLastPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1))), root));
                     //set path
                     trajectory.setPath(this.source + "//" + count[0].toString());
                     //set number of points
@@ -80,8 +94,9 @@ public class LoadIDSATrack implements Traces {
                     splittedList.stream().forEach(s -> {
                         if (!Objects.equals(s, " ")) {
                             List<String> el = Arrays.asList(s.split(","));
-                            Double lat = Double.parseDouble(el.get(0));
-                            Double lon = Double.parseDouble(el.get(1));
+                            Point point = this.convertFromUTMtoDeg(new Point(Double.parseDouble(el.get(0)),Double.parseDouble(el.get(1))), root);
+                            Double lat = point.getLatitude();
+                            Double lon = point.getLongitude();
                             minValue.setLatitude(Math.min(minValue.getLatitude(), lat));
                             minValue.setLongitude(Math.min(minValue.getLongitude(), lon));
                             maxValue.setLatitude(Math.max(maxValue.getLatitude(), lat));
@@ -97,7 +112,9 @@ public class LoadIDSATrack implements Traces {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
+        // With this coordinate this is not the root.
+        //I need to find it on IDSA and hard code it here
+        trajectories.setRootAndWhWorld(root, new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
         return trajectories;
     }
 
@@ -109,6 +126,28 @@ public class LoadIDSATrack implements Traces {
      */
     public Point loadTrajectory(String path, Integer position){
         return null;
+    }
+
+
+    /**
+     * Convert from UTM point to Normal coordinate
+     * IDSA is using UTM coordinate to represent everything
+     * code found http://stackoverflow.com/questions/176137/java-convert-lat-lon-to-utm
+     * @param oldpoint UTM point
+     * @param root root point of the map
+     * @return Normal Coordinate Point
+     */
+    public Point convertFromUTMtoDeg(Point oldpoint, Point root){
+        Integer zone = 31; // Netherlands area code
+        double easting = root.getLatitude() + oldpoint.getLatitude();
+        double north = root.getLongitude() + oldpoint.getLongitude();
+        double latitude = (north/6366197.724/0.9996+(1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)-0.006739496742*Math.sin(north/6366197.724/0.9996)*Math.cos(north/6366197.724/0.9996)*(Math.atan(Math.cos(Math.atan(( Math.exp((easting - 500000) / (0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting - 500000) / (0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3))-Math.exp(-(easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*( 1 -  0.006739496742*Math.pow((easting - 500000) / (0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3)))/2/Math.cos((north-0.9996*6399593.625*(north/6366197.724/0.9996-0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996 )/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3))/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996)))*Math.tan((north-0.9996*6399593.625*(north/6366197.724/0.9996 - 0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996 )*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3))/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996))-north/6366197.724/0.9996)*3/2)*(Math.atan(Math.cos(Math.atan((Math.exp((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3))-Math.exp(-(easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3)))/2/Math.cos((north-0.9996*6399593.625*(north/6366197.724/0.9996-0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3))/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996)))*Math.tan((north-0.9996*6399593.625*(north/6366197.724/0.9996-0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3))/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996))-north/6366197.724/0.9996))*180/Math.PI;
+        latitude = Math.round(latitude * 10000000);
+        latitude = latitude/10000000;
+        double longitude = Math.atan((Math.exp((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3))-Math.exp(-(easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2)/3)))/2/Math.cos((north-0.9996*6399593.625*( north/6366197.724/0.9996-0.006739496742*3/4*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.pow(0.006739496742*3/4,2)*5/3*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2* north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4-Math.pow(0.006739496742*3/4,3)*35/27*(5*(3*(north/6366197.724/0.9996+Math.sin(2*north/6366197.724/0.9996)/2)+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/4+Math.sin(2*north/6366197.724/0.9996)*Math.pow(Math.cos(north/6366197.724/0.9996),2)*Math.pow(Math.cos(north/6366197.724/0.9996),2))/3)) / (0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2))))*(1-0.006739496742*Math.pow((easting-500000)/(0.9996*6399593.625/Math.sqrt((1+0.006739496742*Math.pow(Math.cos(north/6366197.724/0.9996),2)))),2)/2*Math.pow(Math.cos(north/6366197.724/0.9996),2))+north/6366197.724/0.9996))*180/Math.PI+zone*6-183;
+        longitude = Math.round(longitude*10000000);
+        longitude = longitude/10000000;
+        return new Point(latitude, longitude);
     }
 
 }

@@ -122,9 +122,14 @@ public class Point {
 
         Point point = (Point) o;
 
-        return point.time.equals(this.time) && point.dates.equals(this.dates) &&
-                point.dated.equals(this.dated) && point.altitude.equals(this.altitude) &&
-                point.latitude.equals(this.latitude) && point.longitude.equals(this.longitude);
+
+        try {
+            return point.time.equals(this.time) && point.dates.equals(this.dates) &&
+                    point.dated.equals(this.dated) && point.altitude.equals(this.altitude) &&
+                    point.latitude.equals(this.latitude) && point.longitude.equals(this.longitude);
+        }catch (Exception e){
+            return point.latitude.equals(this.latitude) && point.longitude.equals(this.longitude);
+        }
     }
 
 }
