@@ -137,7 +137,7 @@ public class PathFinderGoogle implements Routing {
      * @return lgds Point
      */
     @Override
-    public Point getCenterPointOfTrajectory(){
+    public Point getFirstWayPointOfTrajectory(){
         List<DirectionsStep> res = this.retDirectionStep();
         if(res != null){
             return new Point(res.get(res.size() / 2).startLocation.lat,res.get(res.size() / 2).startLocation.lng);

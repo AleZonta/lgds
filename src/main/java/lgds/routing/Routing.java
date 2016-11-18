@@ -30,7 +30,7 @@ public interface Routing {
     /**
     * Return the center point of the trajectory
     */
-    Point getCenterPointOfTrajectory();
+    Point getFirstWayPointOfTrajectory();
 
     /**
      * Check if the POI is included into the boundary

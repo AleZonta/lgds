@@ -148,8 +148,17 @@ public class PathFinderGraphHopper implements Routing{
      * @return lgds Point
      */
     @Override
-    public Point getCenterPointOfTrajectory(){
-        return new Point(this.rsp.getBest().getPoints().getLatitude(this.rsp.getBest().getPoints().size()/2),this.rsp.getBest().getPoints().getLongitude(this.rsp.getBest().getPoints().size()/2));
+    public Point getFirstWayPointOfTrajectory(){
+        //check how long is the trajectory
+        if(this.rsp.getBest().getPoints().size() >= 2){
+            //return the first way point. The first point is the start of the trajectory, second point is the one that we need
+            //also if it has only two points this code is correct. I return the destination
+            return new Point(this.rsp.getBest().getPoints().getLatitude(1),this.rsp.getBest().getPoints().getLongitude(1));
+        }else{
+            //should be impossible to have less than two point
+            //raise an exception
+            throw new Error("Number of point is not correct");
+        }
     }
 
 

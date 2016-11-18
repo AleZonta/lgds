@@ -44,3 +44,21 @@ osm/properties
 *.pbf
 
 osm_china/edges
+
+osm_china/shortcuts_fastest_car
+
+osm_china/geometry
+
+osm_china/names
+
+osm_china/location_index
+
+osm_china/nodes_ch_fastest_car
+
+osm_china/properties
+
+osm_china/nodes
+
+*.zip
+
+.DS_Store
