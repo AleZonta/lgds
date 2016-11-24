@@ -67,6 +67,15 @@ public class Trajectories {
     }
 
     /**
+     * Compute the list of POIs from the trajectories.
+     * Every destinations are POIs
+     * @param tra trajectory to use to produce the POIs
+     */
+    public void computePOIs(List<Trajectory> tra){
+        tra.stream().forEach(trajectory -> listOfPOIs.add(new POI(trajectory.getLastPoint())));
+    }
+
+    /**
      * set the root of the word and its dimension
      * @param utmRoot root coordinate of the origin of the word
      * @param whWorld width and height of the word

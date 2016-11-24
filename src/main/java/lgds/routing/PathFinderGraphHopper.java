@@ -26,6 +26,7 @@ public class PathFinderGraphHopper implements Routing{
     private GraphHopper hopper; //Instance for the path finder
     private GHResponse rsp; //Response for the path
     private BBox bounds; //Bounds of the map
+    private Point source; //source of the place
 
     /**
      * constructor of the class
@@ -44,6 +45,7 @@ public class PathFinderGraphHopper implements Routing{
         }
         this.hopper = null;
         this.rsp = null;
+        this.source = null;
     }
 
     /**
@@ -110,6 +112,7 @@ public class PathFinderGraphHopper implements Routing{
         //Check if source and destination are inside the bounds of the maps
         if (this.bounds.contains(source.getLatitude(), source.getLongitude())) {
             if (this.bounds.contains(destination.getLatitude(), destination.getLongitude())) {
+                this.source = source;
                 // simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
                 GHRequest req = new GHRequest(source.getLatitude(), source.getLongitude(), destination.getLatitude(), destination.getLongitude()).
                         setWeighting("fastest").
@@ -153,11 +156,14 @@ public class PathFinderGraphHopper implements Routing{
         if(this.rsp.getBest().getPoints().size() >= 2){
             //return the first way point. The first point is the start of the trajectory, second point is the one that we need
             //also if it has only two points this code is correct. I return the destination
-            return new Point(this.rsp.getBest().getPoints().getLatitude(1),this.rsp.getBest().getPoints().getLongitude(1));
+            try {
+                return new Point(this.rsp.getBest().getPoints().getLatitude(1), this.rsp.getBest().getPoints().getLongitude(1));
+            }catch (Exception s){
+                return this.source;
+            }
         }else{
             //should be impossible to have less than two point
-            //raise an exception
-            throw new Error("Number of point is not correct");
+            return this.source;
         }
     }
 
