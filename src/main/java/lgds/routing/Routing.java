@@ -3,6 +3,8 @@ package lgds.routing;
 
 import lgds.trajectories.Point;
 
+import java.util.List;
+
 /**
  * Created by alessandrozonta on 31/10/2016.
  * Interface for routing services
@@ -36,5 +38,10 @@ public interface Routing {
      * Check if the POI is included into the boundary
      */
     Boolean isContained(Point point);
+
+    /**
+     * Return the entire trajectory
+     */
+    List<Point> getTrajectory();
 
 }

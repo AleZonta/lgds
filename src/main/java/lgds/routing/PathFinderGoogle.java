@@ -154,4 +154,13 @@ public class PathFinderGoogle implements Routing {
         return Boolean.TRUE;
     }
 
+    /**
+     * Return the entire trajectory
+     * @return List<Point>
+     */
+    @Override
+    public List<Point> getTrajectory(){
+        return null;
+    }
+
 }

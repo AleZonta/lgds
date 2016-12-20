@@ -129,4 +129,20 @@ public class Trajectory {
     public void setFullLoad(Boolean fullLoad) {
         this.fullLoad = fullLoad;
     }
+
+
+    /**
+     * Compute the ratio between the number of step and the actual distance
+     * @param dis distance misure
+     * @return the ratio of this trajectory
+     */
+    public Double computeRatio(Trajectories.Distance dis){
+        Integer numberOfStep = this.size;
+        double[] source = new double[] { this.firstPoint.getLatitude(), this.firstPoint.getLongitude() };
+        double[] destination = new double[] { this.lastPoint.getLatitude(), this.lastPoint.getLongitude() };
+        //actual distance of the trajectory
+        Double actualDistance = dis.compute(source, destination);
+        //Compute the ration between the distance and the number of steps
+        return actualDistance / numberOfStep;
+    }
 }

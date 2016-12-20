@@ -1,6 +1,7 @@
 package lgds.load_track;
 
 import lgds.config.ConfigFile;
+import lgds.routing.Routing;
 import lgds.trajectories.Point;
 import lgds.trajectories.Trajectories;
 import lgds.trajectories.Trajectory;
@@ -25,7 +26,6 @@ import java.util.stream.Stream;
  */
 public class LoadTrack implements Traces {
     private String source; //location of the gps data
-
     /**
      * Scan the folder (hardcoded location) and load in memory all the trajectories
      * Load position trajectories reading the path from file
@@ -99,7 +99,7 @@ public class LoadTrack implements Traces {
                 trajectory.setFirstPoint(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1)),Double.parseDouble(firstElement.get(3)),Double.parseDouble(firstElement.get(4)),firstElement.get(5),firstElement.get(6)));
                 //set last point
                 List<String> lastElement = Arrays.asList(list.get(list.size() -1 ).split(","));
-                trajectory.setLastPoint(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1)),Double.parseDouble(lastElement.get(3)),Double.parseDouble(lastElement.get(4)),firstElement.get(5),lastElement.get(6)));
+                trajectory.setLastPoint(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1)),Double.parseDouble(lastElement.get(3)),Double.parseDouble(lastElement.get(4)),lastElement.get(5),lastElement.get(6)));
                 //set path
                 trajectory.setPath(path.toString());
                 //set number of points
@@ -135,7 +135,7 @@ public class LoadTrack implements Traces {
         try (Stream<String> stream = Files.lines(Paths.get(path))) {
             //br returns as stream and convert it into a List
             line = stream.skip(position.longValue() + 6L).findFirst().get();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //set first point

@@ -68,5 +68,5 @@ public class PathFinderGraphHopperTest {
         assertEquals(Boolean.FALSE, pf.isContained(destination));
 
     }
-
+    
 }

@@ -27,8 +27,8 @@ public class Simulator implements SimulatorInterface {
      * default constructor
      */
     public Simulator(){
-//        this.storage = new LoadTrack();
-        this.storage = new LoadIDSATrack();
+        this.storage = new LoadTrack();
+//        this.storage = new LoadIDSATrack();
         this.participant = new ArrayList<>();
         this.listOfPOIs = new ArrayList<>();
     }
@@ -55,8 +55,10 @@ public class Simulator implements SimulatorInterface {
         //shuffle it
         tra.shuffle();
         //load with the POIs
-        tra.computePOIs(number * 3);
+        tra.computePOIs(number);
         //this.listOfPOIs = tra.getListOfPOIs();
+        //check ration trajectory
+        tra.analiseAndCheckTrajectory();
         //checking if all the POIs are usable
         tra.getListOfPOIs().stream().forEach(poi -> {
             if(this.pf.isContained(poi.getLocation())){
@@ -70,7 +72,6 @@ public class Simulator implements SimulatorInterface {
         for(int i = 0; i < number; i++) id.add(i);
         //create the agents
         id.stream().forEach(integer -> this.participant.add(new Agent(integer, actualTrajectories.get(integer), this.storage)));
-
 
     }
 

@@ -11,6 +11,7 @@ import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -26,7 +27,7 @@ public class PathFinderGraphHopper implements Routing{
     private GraphHopper hopper; //Instance for the path finder
     private GHResponse rsp; //Response for the path
     private BBox bounds; //Bounds of the map
-    private Point source; //source of the place
+    private Point destination; //source of the place
 
     /**
      * constructor of the class
@@ -45,7 +46,7 @@ public class PathFinderGraphHopper implements Routing{
         }
         this.hopper = null;
         this.rsp = null;
-        this.source = null;
+        this.destination = null;
     }
 
     /**
@@ -89,14 +90,14 @@ public class PathFinderGraphHopper implements Routing{
             }
             return this.rsp.getBest().getDistance();
         }catch (Exception e){
-            System.out.print(e.getLocalizedMessage());
-            System.out.print("\n");
-            System.out.print(this.rsp.getAll().size());
-            System.out.print("\n");
-            System.out.print(this.rsp.getDebugInfo());
-            System.out.print("\n");
-            System.out.print(this.rsp.toString());
-            System.out.print("\n");
+//            System.out.print(e.getLocalizedMessage());
+//            System.out.print("\n");
+//            System.out.print(this.rsp.getAll().size());
+//            System.out.print("\n");
+//            System.out.print(this.rsp.getDebugInfo());
+//            System.out.print("\n");
+//            System.out.print(this.rsp.toString());
+//            System.out.print("\n");
             return 999999.0;
 
         }
@@ -112,7 +113,7 @@ public class PathFinderGraphHopper implements Routing{
         //Check if source and destination are inside the bounds of the maps
         if (this.bounds.contains(source.getLatitude(), source.getLongitude())) {
             if (this.bounds.contains(destination.getLatitude(), destination.getLongitude())) {
-                this.source = source;
+                this.destination = destination;
                 // simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
                 GHRequest req = new GHRequest(source.getLatitude(), source.getLongitude(), destination.getLatitude(), destination.getLongitude()).
                         setWeighting("fastest").
@@ -159,14 +160,29 @@ public class PathFinderGraphHopper implements Routing{
             try {
                 return new Point(this.rsp.getBest().getPoints().getLatitude(1), this.rsp.getBest().getPoints().getLongitude(1));
             }catch (Exception s){
-                return this.source;
+                return this.destination;
             }
         }else{
             //should be impossible to have less than two point
-            return this.source;
+            return this.destination;
         }
     }
 
+
+    /**
+     * Return the entire trajectory
+     * @return List<Point>
+     */
+    public List<Point> getTrajectory(){
+        try {
+            List<Point> listPoint = new ArrayList<>();
+            this.rsp.getBest().getPoints().forEach(ghPoint3D -> listPoint.add(new Point(ghPoint3D.getLat(), ghPoint3D.getLon())));
+            return listPoint;
+        }catch (Exception s){
+            return null;
+        }
+
+    }
 
     /**
      * Check if the POI is included into the boundary
