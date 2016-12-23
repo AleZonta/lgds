@@ -1,11 +1,14 @@
 package lgds.trajectories;
 
 import lgds.POI.POI;
+import lgds.config.ConfigFile;
 import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.Clusterer;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.distance.DistanceMeasure;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +24,7 @@ public class Trajectories {
     private List<POI> listOfPOIs; //list of all the POIs
     private Point utmRoot; //root of the word
     private Point whWorld; // width and height of the word
+    private Integer DBSCANratio; //ratio dbscan
 
     /**
      * Default constructor
@@ -29,6 +33,16 @@ public class Trajectories {
         this.trajectories = new ArrayList<>();
         this.listOfPOIs = new ArrayList<>();
         this.listOfPOIsClustered = new ArrayList<>();
+
+        // load config file
+        ConfigFile conf = new ConfigFile();
+        try {
+            conf.loadFile();
+            this.DBSCANratio = conf.getDBSCANradio();
+        } catch (Exception e) {
+            this.DBSCANratio = 40;
+        }
+
     }
 
     /**
@@ -128,7 +142,7 @@ public class Trajectories {
         System.out.println("Clustering the POI...");
         Distance dis = new Distance();
         //dbscan parameters (distance in metres, minimum number of element, distance measure)
-        Clusterer<POI> dbscan = new DBSCANClusterer<POI>(40, 0, dis);
+        Clusterer<POI> dbscan = new DBSCANClusterer<POI>(this.DBSCANratio, 0, dis);
         this.listOfPOIsClustered = dbscan.cluster(appo_list);
         System.out.println("From " + number.toString() + " to " + this.listOfPOIsClustered.size() + " number of POIs");
     }
@@ -147,7 +161,7 @@ public class Trajectories {
         System.out.println("Clustering the POI...");
         Distance dis = new Distance();
         //dbscan parameters (distance in metres, minimum number of element, distance measure)
-        Clusterer<POI> dbscan = new DBSCANClusterer<POI>(40, 0, dis);
+        Clusterer<POI> dbscan = new DBSCANClusterer<POI>(this.DBSCANratio, 0, dis);
         this.listOfPOIsClustered = dbscan.cluster(appo_list);
         System.out.println("From " + tra.size() + " to " + this.listOfPOIsClustered.size() + " POIs");
 

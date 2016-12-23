@@ -143,6 +143,7 @@ public class Trajectory {
         //actual distance of the trajectory
         Double actualDistance = dis.compute(source, destination);
         //Compute the ration between the distance and the number of steps
+//        System.out.println("Distance " + actualDistance + " number of step " + numberOfStep + " ratio " + actualDistance / numberOfStep);
         return actualDistance / numberOfStep;
     }
 }

@@ -19,6 +19,7 @@ public class ConfigFile {
     private String GraphHopperPath;
     private String GoogleAPIKey;
     private String GraphHopperName;
+    private Integer DBSCANratio;
 
 
     //constructor
@@ -29,6 +30,7 @@ public class ConfigFile {
         this.GraphHopperPath = null;
         this.GoogleAPIKey = null;
         this.GraphHopperName = null;
+        this.DBSCANratio = null;
     }
 
     //method that reads the configfile
@@ -44,6 +46,7 @@ public class ConfigFile {
         this.GraphHopperPath = (String) jsonObject.get("GraphHopperPath");
         this.GoogleAPIKey = (String) jsonObject.get("GoogleAPIKey");
         this.GraphHopperName  = (String) jsonObject.get("GraphHopperName");
+        this.DBSCANratio = ((Long) jsonObject.get("Radio")).intValue();
     }
 
     //getter
@@ -67,4 +70,5 @@ public class ConfigFile {
         return GraphHopperName;
     }
 
+    public Integer getDBSCANradio() { return this.DBSCANratio; }
 }
