@@ -18,6 +18,8 @@ public class ConfigFileTest {
         assertEquals("/Users/alessandrozonta/Documents/lgds/", file.getGraphHopperPath());
         assertEquals("AIzaSyDL8Wc8VXGYPTiFMSTAtj7mKQZukTRawac", file.getGoogleAPIKey());
         assertEquals("china-latest.osm.pbf", file.getGraphHopperName());
+        assertEquals(new Double(4000), file.getMaxLength());
+        assertEquals(new Integer(40), file.getDBSCANradio());
     }
 
 }

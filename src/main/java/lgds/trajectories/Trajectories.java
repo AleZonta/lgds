@@ -1,14 +1,13 @@
 package lgds.trajectories;
 
+import lgds.Distance.Distance;
 import lgds.POI.POI;
 import lgds.config.ConfigFile;
 import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.Clusterer;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.distance.DistanceMeasure;
-import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -86,48 +85,6 @@ public class Trajectories {
     }
 
     /**
-     * Nested class to override the compute distance method
-     */
-    class Distance implements DistanceMeasure {
-
-        /**
-         * Calculate distance between two points in latitude and longitude taking
-         * into account height difference. If you are not interested in height
-         * difference pass 0.0. Uses Haversine method as its base.
-         * Source -> http://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude-what-am-i-doi
-         *
-         * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
-         * el2 End altitude in meters
-         * @returns Distance in Meters
-         */
-        @Override
-        public double compute(double[] doubles, double[] doubles1) {
-            double lat1 = doubles[0];
-            double lat2 = doubles1[0];
-            double lon1 = doubles[1];
-            double lon2 = doubles1[1];
-            double el1 = 0.0;
-            double el2 = 0.0;
-
-            final int R = 6371; // Radius of the earth
-            Double latDistance = Math.toRadians(lat2 - lat1);
-            Double lonDistance = Math.toRadians(lon2 - lon1);
-            Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                    + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                    * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-            Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            double distance = R * c * 1000; // convert to meters
-
-            double height = el1 - el2;
-
-            distance = Math.pow(distance, 2) + Math.pow(height, 2);
-
-            return Math.sqrt(distance);
-
-        }
-    }
-
-    /**
      * Compute the list of POIs from the trajectories.
      * Every destinations are POIs
      * Before adding the poI I should cluster the location to be sure there are not more than n points in the same location.
@@ -202,11 +159,21 @@ public class Trajectories {
         System.out.println("Analysing thw trajectories ...");
         //hardcoded minimum ration need
         Double minumumRatio = 4.0;
-        Distance dis = new Distance();
         Integer initialTrajectories = this.trajectories.size();
         //remove if the ratio is fewer that the minumun Ratio
-        this.trajectories.removeIf(trajectory -> trajectory.computeRatio(dis) < minumumRatio);
+        this.trajectories.removeIf(trajectory -> trajectory.computeRatio() < minumumRatio);
         Integer endTrajectories = this.trajectories.size();
         System.out.println("From " + initialTrajectories.toString() + " to " + endTrajectories.toString() + " trajectories");
+    }
+
+    /**
+     * Return distance between points using inner Class Distance
+     * @param doubles first point
+     * @param doubles1 second point
+     * @return Distance between two points in Double
+     */
+    public Double retDistanceUsingDistanceClass(double[] doubles, double[] doubles1){
+        Distance dis = new Distance();
+        return dis.compute(doubles, doubles1);
     }
 }

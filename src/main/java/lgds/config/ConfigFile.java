@@ -20,6 +20,7 @@ public class ConfigFile {
     private String GoogleAPIKey;
     private String GraphHopperName;
     private Integer DBSCANratio;
+    private Double maxLength; //if length is set to 999999.0 it means no limit
 
 
     //constructor
@@ -31,6 +32,7 @@ public class ConfigFile {
         this.GoogleAPIKey = null;
         this.GraphHopperName = null;
         this.DBSCANratio = null;
+        this.maxLength = null;
     }
 
     //method that reads the configfile
@@ -47,6 +49,7 @@ public class ConfigFile {
         this.GoogleAPIKey = (String) jsonObject.get("GoogleAPIKey");
         this.GraphHopperName  = (String) jsonObject.get("GraphHopperName");
         this.DBSCANratio = ((Long) jsonObject.get("Radio")).intValue();
+        this.maxLength = (Double) jsonObject.get("MaxLength");
     }
 
     //getter
@@ -71,4 +74,6 @@ public class ConfigFile {
     }
 
     public Integer getDBSCANradio() { return this.DBSCANratio; }
+
+    public Double getMaxLength() { return this.maxLength; }
 }

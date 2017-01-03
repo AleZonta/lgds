@@ -26,6 +26,7 @@ import java.util.stream.Stream;
  */
 public class LoadTrack implements Traces {
     private String source; //location of the gps data
+    private Double max_length; //max length trajectory
     /**
      * Scan the folder (hardcoded location) and load in memory all the trajectories
      * Load position trajectories reading the path from file
@@ -36,8 +37,17 @@ public class LoadTrack implements Traces {
         try {
             conf.loadFile();
             this.source = conf.getGeoLifeTrace();
+            Double length = conf.getMaxLength();
+            //if length is set to 999999.0 it means no limit
+            if(length == 999999.0){
+                this.max_length = Double.MAX_VALUE;
+            }else{
+                this.max_length = length;
+            }
+
         } catch (Exception e){
             this.source = null;
+            this.max_length = Double.MAX_VALUE;
         }
     }
 
@@ -116,8 +126,25 @@ public class LoadTrack implements Traces {
                     maxValue.setLongitude(Math.max(maxValue.getLongitude(), lon));
                 });
 
-                trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
-                trajectories.addTrajectory(trajectory);
+                //determine distance between points
+                List<String> el = Arrays.asList(list.get(0).split(","));
+                Double latSource = Double.parseDouble(el.get(0));
+                Double lonSource = Double.parseDouble(el.get(1));
+                Double total = 0d;
+                for(int z = 1; z < list.size(); z++){
+                    List<String> elDestination = Arrays.asList(list.get(z).split(","));
+                    Double latDestination = Double.parseDouble(elDestination.get(0));
+                    Double lonDestination = Double.parseDouble(elDestination.get(1));
+                    total += trajectories.retDistanceUsingDistanceClass(new double[] {latSource, lonSource}, new double[] {latDestination, lonDestination});
+                }
+
+
+                //discriminate length trajectory
+                //only if shorter than max_length i will add the trajectory
+                if(total < this.max_length) {
+                    trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
+                    trajectories.addTrajectory(trajectory);
+                }
 
             });
         }

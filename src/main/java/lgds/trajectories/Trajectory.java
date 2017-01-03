@@ -1,5 +1,6 @@
 package lgds.trajectories;
 
+import lgds.Distance.Distance;
 import lgds.load_track.LoadTrack;
 import lgds.load_track.Traces;
 
@@ -133,17 +134,26 @@ public class Trajectory {
 
     /**
      * Compute the ratio between the number of step and the actual distance
-     * @param dis distance misure
      * @return the ratio of this trajectory
      */
-    public Double computeRatio(Trajectories.Distance dis){
+    public Double computeRatio(){
         Integer numberOfStep = this.size;
-        double[] source = new double[] { this.firstPoint.getLatitude(), this.firstPoint.getLongitude() };
-        double[] destination = new double[] { this.lastPoint.getLatitude(), this.lastPoint.getLongitude() };
         //actual distance of the trajectory
-        Double actualDistance = dis.compute(source, destination);
+        Distance dis = new Distance();
+        Double actualDistance = dis.compute(this.firstPoint, this.lastPoint);
         //Compute the ration between the distance and the number of steps
 //        System.out.println("Distance " + actualDistance + " number of step " + numberOfStep + " ratio " + actualDistance / numberOfStep);
         return actualDistance / numberOfStep;
+    }
+
+
+    /**
+     * Reset reading for the trajectory
+     */
+    public void resetReading(){
+        this.points = new ArrayList<>();
+        this.points.add(this.firstPoint);
+        this.currentReadPosition = 0;
+        this.reachEndFile = Boolean.FALSE;
     }
 }

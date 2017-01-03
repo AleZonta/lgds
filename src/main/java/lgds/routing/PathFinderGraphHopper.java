@@ -7,8 +7,10 @@ import com.graphhopper.PathWrapper;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.shapes.BBox;
+import lgds.Distance.Distance;
 import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
+import lgds.trajectories.Trajectories;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -90,14 +92,7 @@ public class PathFinderGraphHopper implements Routing{
             }
             return this.rsp.getBest().getDistance();
         }catch (Exception e){
-//            System.out.print(e.getLocalizedMessage());
-//            System.out.print("\n");
-//            System.out.print(this.rsp.getAll().size());
-//            System.out.print("\n");
-//            System.out.print(this.rsp.getDebugInfo());
-//            System.out.print("\n");
-//            System.out.print(this.rsp.toString());
-//            System.out.print("\n");
+
             return 999999.0;
 
         }
@@ -126,6 +121,8 @@ public class PathFinderGraphHopper implements Routing{
                     //I know two different errors
                     //Connection between locations not found
                     //Cannot find point
+                    //Compute distance with Distance Measure
+                    Distance dis = new Distance();
                     PathWrapper wr = new PathWrapper();
                     wr.setDistance(99999999.0);
                     PointList list = new PointList();
