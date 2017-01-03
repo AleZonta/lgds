@@ -29,7 +29,8 @@ public class PathFinderGraphHopper implements Routing{
     private GraphHopper hopper; //Instance for the path finder
     private GHResponse rsp; //Response for the path
     private BBox bounds; //Bounds of the map
-    private Point destination; //source of the place
+    private Point destination; //destination of the place
+    private Point source; //source of the place
 
     /**
      * constructor of the class
@@ -49,6 +50,7 @@ public class PathFinderGraphHopper implements Routing{
         this.hopper = null;
         this.rsp = null;
         this.destination = null;
+        this.source = null;
     }
 
     /**
@@ -92,9 +94,10 @@ public class PathFinderGraphHopper implements Routing{
             }
             return this.rsp.getBest().getDistance();
         }catch (Exception e){
-
-            return 999999.0;
-
+            //some error
+            //compute distance using Distance measurement -> should be more accurate
+            Distance dis = new Distance();
+            return dis.compute(this.source,this.destination);
         }
     }
 
@@ -109,6 +112,7 @@ public class PathFinderGraphHopper implements Routing{
         if (this.bounds.contains(source.getLatitude(), source.getLongitude())) {
             if (this.bounds.contains(destination.getLatitude(), destination.getLongitude())) {
                 this.destination = destination;
+                this.source = source;
                 // simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
                 GHRequest req = new GHRequest(source.getLatitude(), source.getLongitude(), destination.getLatitude(), destination.getLongitude()).
                         setWeighting("fastest").
@@ -124,11 +128,11 @@ public class PathFinderGraphHopper implements Routing{
                     //Compute distance with Distance Measure
                     Distance dis = new Distance();
                     PathWrapper wr = new PathWrapper();
-                    wr.setDistance(99999999.0);
+                    wr.setDistance(dis.compute(source,destination));
                     PointList list = new PointList();
-                    list.add(0.0,0.0);
+                    list.add(source.getLatitude(),source.getLongitude());
                     list.add((source.getLatitude() + destination.getLatitude())/2,(source.getLongitude() + destination.getLongitude())/2);
-                    list.add(0.0,0.0);
+                    list.add(destination.getLatitude(),destination.getLongitude());
                     wr.setPoints(list);
                     this.rsp = new GHResponse();
                     this.rsp.add(wr);
