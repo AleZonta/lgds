@@ -72,6 +72,8 @@ public class LoadTrack implements Traces {
         Point maxValue = new Point(Double.MIN_VALUE,Double.MIN_VALUE);
         //find all the subdirectories
         File[] directories = sourceFile.listFiles(File::isDirectory);
+        //count the total trajectory read
+        final Integer[] totalTrajectories = {0};
         for(int i = 0; i < directories.length; i++){
             //list with all the path of all the trajectories of this person
             List<Path> result = new ArrayList<>();
@@ -138,16 +140,22 @@ public class LoadTrack implements Traces {
                     total += trajectories.retDistanceUsingDistanceClass(new double[] {latSource, lonSource}, new double[] {latDestination, lonDestination});
                 }
 
-
+                totalTrajectories[0]++;
                 //discriminate length trajectory
                 //only if shorter than max_length i will add the trajectory
                 if(total < this.max_length) {
-                    trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
-                    trajectories.addTrajectory(trajectory);
+                    //I also want a lowerbound for number of step -> I found example with 5 steps (I do not like them)
+                    //hardcoded minimum number of steps -> 30?
+                    if(list.size() > 30) {
+                        trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
+                        trajectories.addTrajectory(trajectory);
+                    }
                 }
 
             });
         }
+        System.out.println("Max length selected is " + this.max_length);
+        System.out.println("From " + totalTrajectories[0] + " to " + trajectories.getTrajectories().size() + " trajectories loaded");
         return trajectories;
     }
 
