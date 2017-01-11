@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
  */
 public class LoadIDSATrack implements Traces {
     private String source; //location of the gps data
+    private Double max_length; //max length trajectory
 
     /**
      * Load position trajectories reading the path from file
@@ -30,6 +32,13 @@ public class LoadIDSATrack implements Traces {
         try {
             conf.loadFile();
             this.source = conf.getIDSATraces();
+            Double length = conf.getMaxLength();
+            //if length is set to 999999.0 it means no limit
+            if(length == 999999.0){
+                this.max_length = Double.MAX_VALUE;
+            }else{
+                this.max_length = length;
+            }
         } catch (Exception e){
             this.source = null;
         }
@@ -53,7 +62,11 @@ public class LoadIDSATrack implements Traces {
         Point root = new Point(588636.0471215437, 5763563.815469695);
 
         final Integer[] count = {0};
+
+        //List<Double> tt = new ArrayList<>();
         //read file into stream, try-with-resources
+        //count the total trajectory read
+        final Integer[] totalTrajectories = {0};
         try (Stream<String> stream = Files.lines(Paths.get(this.source))) {
 
             stream.forEach(array -> {
@@ -108,7 +121,32 @@ public class LoadIDSATrack implements Traces {
                         }
                     });
 
-                    trajectories.addTrajectory(trajectory);
+                    //determine distance between points
+                    List<String> el = Arrays.asList(splittedList.get(0).split(","));
+                    Point p = this.convertFromUTMtoDeg(new Point(Double.parseDouble(el.get(0)), Double.parseDouble(el.get(1))), new Point(588636.0471215437, 5763563.815469695));
+                    Double latSource = p.getLatitude();
+                    Double lonSource = p.getLongitude();
+                    Double total = 0d;
+                    for(int z = 1; z < splittedList.size(); z++){
+                        if(!Objects.equals(splittedList.get(z), " ")) {
+                            List<String> elDestination = Arrays.asList(splittedList.get(z).split(","));
+                            Point pp = this.convertFromUTMtoDeg(new Point(Double.parseDouble(elDestination.get(0)), Double.parseDouble(elDestination.get(1))), new Point(588636.0471215437, 5763563.815469695));
+                            Double latDestination = pp.getLatitude();
+                            Double lonDestination = pp.getLongitude();
+                            total += trajectories.retDistanceUsingDistanceClass(new double[]{latSource, lonSource}, new double[]{latDestination, lonDestination});
+                        }
+                    }
+//                    System.out.println(total);
+//                    tt.add(total);
+                    totalTrajectories[0]++;
+                    //discriminate length trajectory
+                    //only if shorter than max_length i will add the trajectory
+                    if(total < this.max_length) {
+                        //I also want a lowerbound for number of step -> I found example with 5 steps (I do not like them)
+                        //hardcoded minimum number of steps -> 30?
+                        //if(list.size() > 30) {
+                        trajectories.addTrajectory(trajectory);
+                    }
                 }
 
             });
@@ -116,9 +154,26 @@ public class LoadIDSATrack implements Traces {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+//        Double max = tt.stream().max(Double::compare).get();
+//        Double min = tt.stream().min(Double::compare).get();
+//        System.out.println("Max is -> " + max + " and Min is -> " + min);
+//        Long c = tt.stream().filter(el -> el > 2000000.0).count();
+//        Long d = tt.stream().filter(el -> el > 1000000.0).count();
+//        Long e = tt.stream().filter(el -> el > 800000.0).count();
+//        Long f = tt.stream().filter(el -> el > 160000.0).count();
+//        System.out.println(">2M -> " + c);
+//        System.out.println(">1M -> " + d);
+//        System.out.println(">800K -> " + e);
+//        System.out.println(">160K -> " + f);
+//        System.out.println("Tot -> " + tt.size());
+
         // With this coordinate this is not the root.
         //I need to find it on IDSA and hard code it here
         trajectories.setRootAndWhWorld(root, new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
+        System.out.println("Max length selected is " + this.max_length);
+        System.out.println("From " + totalTrajectories[0] + " to " + trajectories.getTrajectories().size() + " trajectories loaded");
         return trajectories;
     }
 

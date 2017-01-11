@@ -146,10 +146,10 @@ public class LoadTrack implements Traces {
                 if(total < this.max_length) {
                     //I also want a lowerbound for number of step -> I found example with 5 steps (I do not like them)
                     //hardcoded minimum number of steps -> 30?
-                    if(list.size() > 30) {
-                        trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
-                        trajectories.addTrajectory(trajectory);
-                    }
+                    //if(list.size() > 30) {
+                    trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
+                    trajectories.addTrajectory(trajectory);
+                    //}
                 }
 
             });
