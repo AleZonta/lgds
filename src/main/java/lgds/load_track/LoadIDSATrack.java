@@ -1,5 +1,6 @@
 package lgds.load_track;
 
+import lgds.POI.POI;
 import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
 import lgds.trajectories.Trajectories;
@@ -63,7 +64,7 @@ public class LoadIDSATrack implements Traces {
 
         final Integer[] count = {0};
 
-        //List<Double> tt = new ArrayList<>();
+        List<Double> tt = new ArrayList<>();
         //read file into stream, try-with-resources
         //count the total trajectory read
         final Integer[] totalTrajectories = {0};
@@ -99,7 +100,11 @@ public class LoadIDSATrack implements Traces {
                     //set last point
                     List<String> lastElement = Arrays.asList(splittedList.get(splittedList.size() - 2).split(","));
                     //trajectory.setLastPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1))), root));
-                    trajectory.setLastPoint(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1))));
+//                    trajectory.setLastPoint(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1))));
+                    Point lastPoint = new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1)));
+                    trajectory.setLastPoint(lastPoint);
+                    //always add the end point to the list that contains all the POIs
+                    trajectories.addPOItoTotalList(new POI(lastPoint));
                     //set path
                     trajectory.setPath(this.source + "//" + count[0].toString());
                     //set number of points
@@ -134,10 +139,12 @@ public class LoadIDSATrack implements Traces {
                             Double latDestination = pp.getLatitude();
                             Double lonDestination = pp.getLongitude();
                             total += trajectories.retDistanceUsingDistanceClass(new double[]{latSource, lonSource}, new double[]{latDestination, lonDestination});
+                            latSource = latDestination;
+                            lonSource = lonDestination;
                         }
                     }
 //                    System.out.println(total);
-//                    tt.add(total);
+                    tt.add(total);
                     totalTrajectories[0]++;
                     //discriminate length trajectory
                     //only if shorter than max_length i will add the trajectory

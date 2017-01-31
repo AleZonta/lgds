@@ -55,7 +55,7 @@ public class Simulator implements SimulatorInterface {
         //shuffle it
         tra.shuffle();
         //load with the POIs
-        tra.computePOIs(number);
+        tra.computePOIs(number, Boolean.TRUE, 5000);
         //this.listOfPOIs = tra.getListOfPOIs();
         //check ration trajectory
         tra.analiseAndCheckTrajectory();
@@ -72,6 +72,7 @@ public class Simulator implements SimulatorInterface {
         for(int i = 0; i < number; i++) id.add(i);
         //create the agents
         id.stream().forEach(integer -> this.participant.add(new Agent(integer, actualTrajectories.get(integer), this.storage)));
+
 
     }
 

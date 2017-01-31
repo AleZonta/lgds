@@ -20,7 +20,8 @@ import java.util.Random;
 public class Trajectories {
     private List<Trajectory> trajectories; // all the trajectories
     private List<? extends Cluster<POI>> listOfPOIsClustered; //list of all the POIs
-    private List<POI> listOfPOIs; //list of all the POIs
+    private List<POI> listOfPOIs; //list of all the POIs of the selected subsection
+    private List<POI> totalListOfPOIs; //list of all the end destination of the trajectories
     private Point utmRoot; //root of the word
     private Point whWorld; // width and height of the word
     private Integer DBSCANratio; //ratio dbscan
@@ -32,7 +33,7 @@ public class Trajectories {
         this.trajectories = new ArrayList<>();
         this.listOfPOIs = new ArrayList<>();
         this.listOfPOIsClustered = new ArrayList<>();
-
+        this.totalListOfPOIs = new ArrayList<>();
         // load config file
         ConfigFile conf = new ConfigFile();
         try {
@@ -51,6 +52,13 @@ public class Trajectories {
     public void addTrajectory(Trajectory trajectory){
         this.trajectories.add(trajectory);
     }
+
+
+    /**
+     * Add poi to the total list of POIs
+     * @param poi poi that is added to the list
+     */
+    public void addPOItoTotalList(POI poi) { this.totalListOfPOIs.add(poi); }
 
     /**
      * getter for the trajectories field
@@ -89,38 +97,92 @@ public class Trajectories {
      * Every destinations are POIs
      * Before adding the poI I should cluster the location to be sure there are not more than n points in the same location.
      * @param number number of trace that I am considering
+     * @param general if true I select only POIs from the subset loaded, if false I select randomly from the list with all the POIs
+     * @param increaseNumber If general is false i add the increaseNumber of POIs to the list
      */
-    public void computePOIs(Integer number){
+    public void computePOIs(Integer number, Boolean general, Integer increaseNumber){
         //store temporarily all the POIs here
         List<POI> appo_list = new ArrayList<>();
         this.trajectories.stream().limit(number).forEach(trajectory -> appo_list.add(new POI(trajectory.getLastPoint())));
         this.trajectories.stream().limit(number).forEach(trajectory -> this.listOfPOIs.add(new POI(trajectory.getLastPoint())));
+
+        //if general is True I add increaseNumber of POIs to the final number of POIs
+        if (general) {
+            Random rand = new Random(23);
+            //check increaseNumber
+            if(increaseNumber + number > this.totalListOfPOIs.size()){
+                increaseNumber = this.totalListOfPOIs.size() - number - 1;
+            }
+            for (int i = 0; i < increaseNumber; i++){
+                Integer val = rand.nextInt(this.totalListOfPOIs.size());
+                POI selected = this.totalListOfPOIs.get(val);
+                POI finalSelected = selected;
+                //check if the POI selected is already inside
+                Boolean present = appo_list.stream().filter(poi -> poi.equals(finalSelected)).findAny().isPresent();
+                while (present){
+                    val = rand.nextInt(this.totalListOfPOIs.size());
+                    selected = this.totalListOfPOIs.get(val);
+                    POI finalSelected1 = selected;
+                    present = appo_list.stream().filter(poi -> poi.equals(finalSelected1)).findAny().isPresent();
+                }
+                //if not present inside add the POI to the two different lists
+                appo_list.add(selected);
+                this.listOfPOIs.add(selected);
+            }
+        }
 
         System.out.println("Clustering the POI...");
         Distance dis = new Distance();
         //dbscan parameters (distance in metres, minimum number of element, distance measure)
         Clusterer<POI> dbscan = new DBSCANClusterer<POI>(this.DBSCANratio, 0, dis);
         this.listOfPOIsClustered = dbscan.cluster(appo_list);
-        System.out.println("From " + number.toString() + " to " + this.listOfPOIsClustered.size() + " number of POIs");
+        System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " number of POIs");
     }
 
     /**
      * Compute the list of POIs from the trajectories.
      * Every destinations are POIs
      * @param tra trajectory to use to produce the POIs
+     * @param general if true I select only POIs from the subset loaded, if false I select randomly from the list with all the POIs
+     * @param increaseNumber If general is false i add the increaseNumber of POIs to the list
      */
-    public void computePOIs(List<Trajectory> tra){
+    public void computePOIs(List<Trajectory> tra, Boolean general, Integer increaseNumber){
         //store temporarily all the POIs here
         List<POI> appo_list = new ArrayList<>();
         tra.stream().forEach(trajectory -> appo_list.add(new POI(trajectory.getLastPoint())));
         tra.stream().forEach(trajectory -> this.listOfPOIs.add(new POI(trajectory.getLastPoint())));
+
+        //if general is True I add increaseNumber of POIs to the final number of POIs
+        if (general) {
+            Random rand = new Random(23);
+            //check increaseNumber
+            if(increaseNumber + tra.size() > this.totalListOfPOIs.size()){
+                increaseNumber = this.totalListOfPOIs.size() - tra.size() - 1;
+            }
+            for (int i = 0; i < increaseNumber; i++){
+                Integer val = rand.nextInt(this.totalListOfPOIs.size());
+                POI selected = this.totalListOfPOIs.get(val);
+                POI finalSelected = selected;
+                //check if the POI selected is already inside
+                Boolean present = appo_list.stream().filter(poi -> poi.equals(finalSelected)).findAny().isPresent();
+                while (present){
+                    val = rand.nextInt(this.totalListOfPOIs.size());
+                    selected = this.totalListOfPOIs.get(val);
+                    POI finalSelected1 = selected;
+                    present = appo_list.stream().filter(poi -> poi.equals(finalSelected1)).findAny().isPresent();
+                }
+                //if not present inside add the POI to the two different lists
+                appo_list.add(selected);
+                this.listOfPOIs.add(selected);
+            }
+        }
 
         System.out.println("Clustering the POI...");
         Distance dis = new Distance();
         //dbscan parameters (distance in metres, minimum number of element, distance measure)
         Clusterer<POI> dbscan = new DBSCANClusterer<POI>(this.DBSCANratio, 0, dis);
         this.listOfPOIsClustered = dbscan.cluster(appo_list);
-        System.out.println("From " + tra.size() + " to " + this.listOfPOIsClustered.size() + " POIs");
+        System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " POIs");
 
     }
 

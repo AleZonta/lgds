@@ -36,4 +36,21 @@ public class POI implements Clusterable {
     public double[] getPoint() {
         return this.points;
     }
+
+
+    /**
+     * override method equals
+     * @param o object to compare with this POI
+     * @return if the two POIs are the same or not
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Point)) {
+            return false;
+        }
+
+        POI point = (POI) o;
+        return this.location.equals(point.getLocation());
+    }
 }

@@ -195,5 +195,11 @@ public class PathFinderGraphHopper implements Routing{
         }
         return Boolean.FALSE;
     }
+
+
+    public void visualise(GraphHopper hopper){
+    }
+
+
 }
 

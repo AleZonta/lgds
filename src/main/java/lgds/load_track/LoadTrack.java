@@ -1,5 +1,6 @@
 package lgds.load_track;
 
+import lgds.POI.POI;
 import lgds.config.ConfigFile;
 import lgds.routing.Routing;
 import lgds.trajectories.Point;
@@ -111,7 +112,10 @@ public class LoadTrack implements Traces {
                 trajectory.setFirstPoint(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1)),Double.parseDouble(firstElement.get(3)),Double.parseDouble(firstElement.get(4)),firstElement.get(5),firstElement.get(6)));
                 //set last point
                 List<String> lastElement = Arrays.asList(list.get(list.size() -1 ).split(","));
-                trajectory.setLastPoint(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1)),Double.parseDouble(lastElement.get(3)),Double.parseDouble(lastElement.get(4)),lastElement.get(5),lastElement.get(6)));
+                Point lastPoint = new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1)),Double.parseDouble(lastElement.get(3)),Double.parseDouble(lastElement.get(4)),lastElement.get(5),lastElement.get(6));
+                trajectory.setLastPoint(lastPoint);
+                //always add the end point to the list that contains all the POIs
+                trajectories.addPOItoTotalList(new POI(lastPoint));
                 //set path
                 trajectory.setPath(path.toString());
                 //set number of points
@@ -138,9 +142,12 @@ public class LoadTrack implements Traces {
                     Double latDestination = Double.parseDouble(elDestination.get(0));
                     Double lonDestination = Double.parseDouble(elDestination.get(1));
                     total += trajectories.retDistanceUsingDistanceClass(new double[] {latSource, lonSource}, new double[] {latDestination, lonDestination});
+                    latSource = latDestination;
+                    lonSource = lonDestination;
                 }
 
                 totalTrajectories[0]++;
+
                 //discriminate length trajectory
                 //only if shorter than max_length i will add the trajectory
                 if(total < this.max_length) {
