@@ -12,7 +12,7 @@ import java.awt.geom.Point2D;
  * Created by alessandrozonta on 31/01/2017.
  * Drow my personal point in the map
  */
-public class FancyWaypointRenderer implements WaypointRenderer<MyWaypoint> {
+public class CircleWaypointRenderer implements WaypointRenderer<MyWaypoint> {
 
     /**
      * Draw a circle in the position given by the caller

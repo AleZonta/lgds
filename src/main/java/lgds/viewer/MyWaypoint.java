@@ -1,5 +1,7 @@
 package lgds.viewer;
 
+import lgds.trajectories.*;
+import lgds.trajectories.Point;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 
@@ -13,6 +15,7 @@ public class MyWaypoint extends DefaultWaypoint {
     private String label;
     private Color color;
     private Double diameter = 10d;
+    private Integer constant_better_view = 10;
 
     /**
      * Constructor of the class
@@ -26,7 +29,7 @@ public class MyWaypoint extends DefaultWaypoint {
         super(coord);
         this.label = label;
         this.color = color;
-        this.diameter = diameter;
+        this.diameter = diameter * this.constant_better_view;
     }
 
     /**
@@ -75,6 +78,15 @@ public class MyWaypoint extends DefaultWaypoint {
      * @param diameter of the point in Double
      */
     public void setDiameter(Double diameter) {
-        this.diameter = diameter;
+        this.diameter = diameter * this.constant_better_view;
+    }
+
+
+    /**
+     * Return an lgds Point with the coordinate of this point
+     * @return lgds Point
+     */
+    public lgds.trajectories.Point getPointPosition(){
+        return new Point(super.getPosition().getLatitude(), super.getPosition().getLongitude());
     }
 }

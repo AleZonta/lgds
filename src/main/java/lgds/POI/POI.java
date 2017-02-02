@@ -9,6 +9,7 @@ import org.apache.commons.math3.ml.clustering.Clusterable;
 public class POI implements Clusterable {
     private Point location; //Location of the point of interest
     private double[] points; //Need for extend Clusterable class
+    private Double charge; //charge of the POI
 
     /**
      * Constructor with one parameter
@@ -17,6 +18,18 @@ public class POI implements Clusterable {
     public POI(Point location){
         this.location = location;
         this.points = new double[] { location.getLatitude(), location.getLongitude() };
+        this.charge = 0.0;
+    }
+
+    /**
+     * Construnctor with also the charge
+     * @param location location of the POI
+     * @param charge charge of the POI
+     */
+    public POI(Point location, Double charge){
+        this.location = location;
+        this.points = new double[] { location.getLatitude(), location.getLongitude() };
+        this.charge = charge;
     }
 
     /**
@@ -37,6 +50,21 @@ public class POI implements Clusterable {
         return this.points;
     }
 
+    /**
+     * Return the Charge of the POI
+     * @return the charge in Double value
+     */
+    public Double getCharge() {
+        return charge;
+    }
+
+    /**
+     * Set the charge of the POI
+     * @param charge charge to set in Double
+     */
+    public void setCharge(Double charge) {
+        this.charge = charge;
+    }
 
     /**
      * override method equals
