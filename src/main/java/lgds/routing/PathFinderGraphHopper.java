@@ -3,20 +3,16 @@ package lgds.routing;
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
-import com.graphhopper.PathWrapper;
 import com.graphhopper.routing.util.EncodingManager;
-import com.graphhopper.util.PointList;
 import com.graphhopper.util.shapes.BBox;
 import lgds.Distance.Distance;
 import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
-import lgds.trajectories.Trajectories;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 /**
  * Created by alessandrozonta on 31/10/2016.
@@ -90,7 +86,9 @@ public class PathFinderGraphHopper implements Routing{
     public Double retTotalDistance() {
         try {
             if (this.rsp == null){
-                return null;
+                Distance dis = new Distance();
+                return dis.compute(this.source,this.destination);
+                //return null;
             }
             return this.rsp.getBest().getDistance();
         }catch (Exception e){
@@ -126,16 +124,17 @@ public class PathFinderGraphHopper implements Routing{
                     //Connection between locations not found
                     //Cannot find point
                     //Compute distance with Distance Measure
-                    Distance dis = new Distance();
-                    PathWrapper wr = new PathWrapper();
-                    wr.setDistance(dis.compute(source,destination));
-                    PointList list = new PointList();
-                    list.add(source.getLatitude(),source.getLongitude());
-                    list.add((source.getLatitude() + destination.getLatitude())/2,(source.getLongitude() + destination.getLongitude())/2);
-                    list.add(destination.getLatitude(),destination.getLongitude());
-                    wr.setPoints(list);
-                    this.rsp = new GHResponse();
-                    this.rsp.add(wr);
+//                    Distance dis = new Distance();
+//                    PathWrapper wr = new PathWrapper();
+//                    wr.setDistance(dis.compute(source,destination));
+//                    PointList list = new PointList();
+//                    list.add(source.getLatitude(),source.getLongitude());
+//                    list.add((source.getLatitude() + destination.getLatitude())/2,(source.getLongitude() + destination.getLongitude())/2);
+//                    list.add(destination.getLatitude(),destination.getLongitude());
+//                    wr.setPoints(list);
+//                    this.rsp = new GHResponse();
+//                    this.rsp.add(wr);
+
                 }
             } else {
                 this.rsp = null;

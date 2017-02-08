@@ -62,3 +62,25 @@ osm_china/nodes
 *.zip
 
 .DS_Store
+
+osm_ned(maybe wrong)/names
+
+osm_ned(maybe wrong)/edges
+
+osm_ned(maybe wrong)/location_index
+
+osm_ned(maybe wrong)/geometry
+
+osm_ned(maybe wrong)/nodes
+
+osm_ned(maybe wrong)/nodes_ch_fastest_car
+
+osm_ned(maybe wrong)/properties
+
+osm_ned(maybe wrong)/shortcuts_fastest_car
+
+*.iml
+
+lgds_config.JSON
+
+lgds.iml

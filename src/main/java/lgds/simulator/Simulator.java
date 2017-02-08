@@ -1,7 +1,6 @@
 package lgds.simulator;
 
 import lgds.POI.POI;
-import lgds.load_track.LoadIDSATrack;
 import lgds.load_track.LoadTrack;
 import lgds.load_track.Traces;
 import lgds.people.Agent;
@@ -55,7 +54,7 @@ public class Simulator implements SimulatorInterface {
         //shuffle it
         tra.shuffle();
         //load with the POIs
-        tra.computePOIs(number, Boolean.TRUE, 5000);
+        tra.computePOIs(number, Boolean.TRUE, -50);
         //this.listOfPOIs = tra.getListOfPOIs();
         //check ration trajectory
         tra.analiseAndCheckTrajectory();

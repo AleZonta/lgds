@@ -1,6 +1,5 @@
 package lgds.viewer;
 
-import lgds.trajectories.*;
 import lgds.trajectories.Point;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -15,7 +14,7 @@ public class MyWaypoint extends DefaultWaypoint {
     private String label;
     private Color color;
     private Double diameter = 10d;
-    private Integer constant_better_view = 10;
+    private Double constant_better_view = 0.5;
 
     /**
      * Constructor of the class
