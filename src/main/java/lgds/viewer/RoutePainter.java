@@ -5,9 +5,8 @@ import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.GeoPosition;
 
 import java.awt.*;
-import java.awt.List;
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Created by alessandrozonta on 31/01/2017.
@@ -54,13 +53,13 @@ public class RoutePainter implements Painter<JXMapViewer>
 
         // do the drawing
         g.setColor(Color.BLACK);
-        g.setStroke(new BasicStroke(4));
+        g.setStroke(new BasicStroke(6));
 
         drawRoute(g, map);
 
         // do the drawing again
         g.setColor(color);
-        g.setStroke(new BasicStroke(2));
+        g.setStroke(new BasicStroke(4));
 
         drawRoute(g, map);
 

@@ -1,7 +1,9 @@
 {
-  "IDSATraces": "/Users/alessandrozonta/PycharmProjects/createTraces/traces.txt",
+  "IDSATraces": "/Users/alessandrozonta/Documents/ResultsExp/traces/traces.txt",
   "GeoLifeTrace": "/Users/alessandrozonta/Downloads/Geolife trajectories 1.3/Data",
   "GraphHopperPath": "/Users/alessandrozonta/Documents/lgds/",
   "GoogleAPIKey": "AIzaSyDL8Wc8VXGYPTiFMSTAtj7mKQZukTRawac",
-  "GraphHopperName" : "netherlands-latest.osm.pbf"
+  "GraphHopperName" : "netherlands-latest.osm.pbf",
+  "Radio": 40,
+  "MaxLength": 1500.0
 }

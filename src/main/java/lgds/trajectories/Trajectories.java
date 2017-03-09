@@ -108,40 +108,26 @@ public class Trajectories {
         //if general is True I add increaseNumber of POIs to the final number of POIs
         if (general) {
             //if the number is positive I will add that number of POI
-            if(increaseNumber > 0) {
-                Random rand = new Random(23);
-                //check increaseNumber
-                if (increaseNumber + number > this.totalListOfPOIs.size()) {
-                    increaseNumber = this.totalListOfPOIs.size() - number - 1;
+            Random rand = new Random(23);
+            //check increaseNumber
+            if (increaseNumber + number > this.totalListOfPOIs.size()) {
+                increaseNumber = this.totalListOfPOIs.size() - number - 1;
+            }
+            for (int i = 0; i < increaseNumber; i++) {
+                Integer val = rand.nextInt(this.totalListOfPOIs.size());
+                POI selected = this.totalListOfPOIs.get(val);
+                POI finalSelected = selected;
+                //check if the POI selected is already inside
+                Boolean present = appo_list.stream().filter(poi -> poi.equals(finalSelected)).findAny().isPresent();
+                while (present) {
+                    val = rand.nextInt(this.totalListOfPOIs.size());
+                    selected = this.totalListOfPOIs.get(val);
+                    POI finalSelected1 = selected;
+                    present = appo_list.stream().filter(poi -> poi.equals(finalSelected1)).findAny().isPresent();
                 }
-                for (int i = 0; i < increaseNumber; i++) {
-                    Integer val = rand.nextInt(this.totalListOfPOIs.size());
-                    POI selected = this.totalListOfPOIs.get(val);
-                    POI finalSelected = selected;
-                    //check if the POI selected is already inside
-                    Boolean present = appo_list.stream().filter(poi -> poi.equals(finalSelected)).findAny().isPresent();
-                    while (present) {
-                        val = rand.nextInt(this.totalListOfPOIs.size());
-                        selected = this.totalListOfPOIs.get(val);
-                        POI finalSelected1 = selected;
-                        present = appo_list.stream().filter(poi -> poi.equals(finalSelected1)).findAny().isPresent();
-                    }
-                    //if not present inside add the POI to the two different lists
-                    appo_list.add(selected);
-                    this.listOfPOIs.add(selected);
-                }
-            }else{
-                //if it is negative i will delete some of the POI selected
-                if(this.listOfPOIs.size() -  Math.abs(increaseNumber) < 2){
-                    throw new Error("All the POI are deleted. Wrong -> You must change the increase point number!");
-                }
-                //Now I erase randomly some element. The programm than will add the real target if not present
-                Random rand = new Random(23);
-                for (int i = 0; i <  Math.abs(increaseNumber) + 1; i++) {
-                    Integer val = rand.nextInt(this.listOfPOIs.size());
-                    this.listOfPOIs.remove(val.intValue());
-                    appo_list.remove(val.intValue());
-                }
+                //if not present inside add the POI to the two different lists
+                appo_list.add(selected);
+                this.listOfPOIs.add(selected);
             }
         }
 
@@ -169,40 +155,26 @@ public class Trajectories {
         //if general is True I add increaseNumber of POIs to the final number of POIs
         if (general) {
             //if the number is positive I will add that number of POI
-            if(increaseNumber > 0) {
-                Random rand = new Random(23);
-                //check increaseNumber
-                if (increaseNumber + tra.size() > this.totalListOfPOIs.size()) {
-                    increaseNumber = this.totalListOfPOIs.size() - tra.size() - 1;
+            Random rand = new Random(23);
+            //check increaseNumber
+            if (increaseNumber + tra.size() > this.totalListOfPOIs.size()) {
+                increaseNumber = this.totalListOfPOIs.size() - tra.size() - 1;
+            }
+            for (int i = 0; i < increaseNumber; i++) {
+                Integer val = rand.nextInt(this.totalListOfPOIs.size());
+                POI selected = this.totalListOfPOIs.get(val);
+                POI finalSelected = selected;
+                //check if the POI selected is already inside
+                Boolean present = appo_list.stream().filter(poi -> poi.equals(finalSelected)).findAny().isPresent();
+                while (present) {
+                    val = rand.nextInt(this.totalListOfPOIs.size());
+                    selected = this.totalListOfPOIs.get(val);
+                    POI finalSelected1 = selected;
+                    present = appo_list.stream().filter(poi -> poi.equals(finalSelected1)).findAny().isPresent();
                 }
-                for (int i = 0; i < increaseNumber; i++) {
-                    Integer val = rand.nextInt(this.totalListOfPOIs.size());
-                    POI selected = this.totalListOfPOIs.get(val);
-                    POI finalSelected = selected;
-                    //check if the POI selected is already inside
-                    Boolean present = appo_list.stream().filter(poi -> poi.equals(finalSelected)).findAny().isPresent();
-                    while (present) {
-                        val = rand.nextInt(this.totalListOfPOIs.size());
-                        selected = this.totalListOfPOIs.get(val);
-                        POI finalSelected1 = selected;
-                        present = appo_list.stream().filter(poi -> poi.equals(finalSelected1)).findAny().isPresent();
-                    }
-                    //if not present inside add the POI to the two different lists
-                    appo_list.add(selected);
-                    this.listOfPOIs.add(selected);
-                }
-            } else{
-                //if it is negative i will delete some of the POI selected
-                if(this.listOfPOIs.size() -  Math.abs(increaseNumber) < 2){
-                    throw new Error("All the POI are deleted. Wrong -> You must change the increase point number!");
-                }
-                //Now I erase randomly some element. The programm than will add the real target if not present
-                Random rand = new Random(23);
-                for (int i = 0; i <  Math.abs(increaseNumber) + 1; i++) {
-                    Integer val = rand.nextInt(this.listOfPOIs.size());
-                    this.listOfPOIs.remove(val.intValue());
-                    appo_list.remove(val.intValue());
-                }
+                //if not present inside add the POI to the two different lists
+                appo_list.add(selected);
+                this.listOfPOIs.add(selected);
             }
         }
 

@@ -14,7 +14,7 @@ public class MyWaypoint extends DefaultWaypoint {
     private String label;
     private Color color;
     private Double diameter = 10d;
-    private Double constant_better_view = 0.5;
+    private Double constant_better_view = 0.1;
 
     /**
      * Constructor of the class
