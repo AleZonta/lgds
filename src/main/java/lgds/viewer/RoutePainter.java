@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class RoutePainter implements Painter<JXMapViewer>
 {
-    private Color color = Color.RED;
+    private Color color = Color.BLUE;
     private boolean antiAlias = true;
 
     private java.util.List<GeoPosition> track;

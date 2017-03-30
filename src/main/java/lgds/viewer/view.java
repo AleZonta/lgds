@@ -171,9 +171,24 @@ public class View {
      */
     public void setNewPOI(List<POI> poiList){
 
+
+        // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
+        Double NewMax = 255.0;
+        Double NewMin = 0.0;
+
+        List<Double> values = new ArrayList<>();
+        poiList.stream().forEach(poi -> values.add(poi.getCharge()));
+
+        Double OldMin = values.stream().min(Comparator.naturalOrder()).get();
+        Double OldMax = values.stream().max(Comparator.naturalOrder()).get();
+
         this.circleWayPointPainter.getWaypoints().stream().forEach(myWaypoint -> {
-            myWaypoint.setDiameter(poiList.stream().filter(poi -> poi.getLocation().equals(myWaypoint.getPointPosition())).findFirst().get().getCharge());
+            Double charge = poiList.stream().filter(poi -> poi.getLocation().equals(myWaypoint.getPointPosition())).findFirst().get().getCharge();
+            Double percent = (charge - OldMin) / (OldMax - OldMin);
+//            myWaypoint.setDiameter((((charge - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin);
+            myWaypoint.setDiameter(percent * (NewMax - NewMin) + NewMin);
         });
+
         // Create a compound painter that uses both the route-painter and the waypoint-painter
         List<org.jxmapviewer.painter.Painter<JXMapViewer>> painters = new ArrayList<org.jxmapviewer.painter.Painter<JXMapViewer>>();
         painters.add(this.routePainter);
@@ -182,6 +197,11 @@ public class View {
         this.mapViewer.removeAll();
         this.mapViewer.setOverlayPainter(painter);
         this.mapViewer.repaint();
+
+
+        List<Double> values2 = new ArrayList<>();
+        this.circleWayPointPainter.getWaypoints().stream().forEach(poi -> values2.add(poi.getDiameter()));
+//        System.out.println(values2.toString());
     }
 
     /**
@@ -296,7 +316,7 @@ public class View {
 
 
         // Set the focus
-        this.mapViewer.setZoom(10);
+        this.mapViewer.setZoom(8);
         this.mapViewer.setAddressLocation(this.mapFocus);
 
         // Add interactions
@@ -338,7 +358,7 @@ public class View {
         // Display the viewer in a JFrame
         JFrame frame = new JFrame("Viewer for lgds_idsa");
         frame.getContentPane().add(this.mapViewer);
-        frame.setSize(1024, 768);
+        frame.setSize(1440, 900);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

@@ -32,9 +32,13 @@ public class CircleWaypointRenderer implements WaypointRenderer<MyWaypoint> {
         int y = (int)point.getY();
 
         //Compute radius and diameter
-        Double radius = w.getDiameter()/2;
-        Double diameter = w.getDiameter();
-        g.setColor(w.getColor());
+//        Double radius = w.getDiameter()/2;
+//        Double diameter = w.getDiameter();
+        Double radius = 10d;
+        Double diameter = 20d;
+        Integer R = 255 - w.getDiameter().intValue();
+        Integer G = w.getDiameter().intValue();
+        g.setColor(new Color(R, G , 0, 0));
         g.setStroke(new BasicStroke(1f));
 
         /* Enable anti-aliasing and pure stroke */
@@ -43,9 +47,9 @@ public class CircleWaypointRenderer implements WaypointRenderer<MyWaypoint> {
 
         /* Construct a shape and draw it */
         Ellipse2D.Double shape = new Ellipse2D.Double(x - radius, y - radius, diameter, diameter);
-        g.setColor(w.getColor());
+        g.setColor(new Color(R, G , 0, 127));
         g.fill(shape);
-        g.setColor(Color.black);
+        g.setColor(new Color(R, G, 0, 90));
         g.draw(shape);
 
         //g.fillOval(x - radius.intValue(), y - radius.intValue(), diameter.intValue(), diameter.intValue());
