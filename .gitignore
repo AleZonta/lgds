@@ -81,6 +81,8 @@ osm_ned(maybe wrong)/shortcuts_fastest_car
 
 *.iml
 
-lgds_config.JSON
+settings.JSON
+
+lgds.iml
 
 lgds.iml

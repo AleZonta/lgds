@@ -25,7 +25,7 @@ public class ConfigFile {
 
     //constructor
     public ConfigFile(){
-        this.currentPath = Paths.get(".").toAbsolutePath().normalize().toString() + "/lgds_config.json";
+        this.currentPath = Paths.get(".").toAbsolutePath().normalize().toString() + "/settings.json";
         this.IDSATraces = null;
         this.GeoLifeTrace = null;
         this.GraphHopperPath = null;
