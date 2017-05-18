@@ -21,6 +21,7 @@ public class ConfigFile {
     private String GraphHopperName;
     private Integer DBSCANratio;
     private Double maxLength; //if length is set to 999999.0 it means no limit
+    private Boolean translate; //Do i have to translate the original coordinates (only for IDSA)
 
 
     //constructor
@@ -33,6 +34,7 @@ public class ConfigFile {
         this.GraphHopperName = null;
         this.DBSCANratio = null;
         this.maxLength = null;
+        this.translate = null;
     }
 
     //method that reads the configfile
@@ -50,6 +52,11 @@ public class ConfigFile {
         this.GraphHopperName  = (String) jsonObject.get("GraphHopperName");
         this.DBSCANratio = ((Long) jsonObject.get("Radio")).intValue();
         this.maxLength = (Double) jsonObject.get("MaxLength");
+        if(((Long) jsonObject.get("translate")).intValue()==0){
+            this.translate = Boolean.FALSE;
+        }else{
+            this.translate = Boolean.TRUE;
+        }
     }
 
     //getter
@@ -76,4 +83,8 @@ public class ConfigFile {
     public Integer getDBSCANradio() { return this.DBSCANratio; }
 
     public Double getMaxLength() { return this.maxLength; }
+
+    public Boolean getTranslate() {
+        return this.translate;
+    }
 }

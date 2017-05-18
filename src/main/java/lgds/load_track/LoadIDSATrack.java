@@ -5,7 +5,7 @@ import lgds.config.ConfigFile;
 import lgds.trajectories.Point;
 import lgds.trajectories.Trajectories;
 import lgds.trajectories.Trajectory;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 public class LoadIDSATrack implements Traces {
     private String source; //location of the gps data
     private Double max_length; //max length trajectory
+    private Boolean translation; // do i have to translate the coordinates
 
     /**
      * Load position trajectories reading the path from file
@@ -33,6 +34,7 @@ public class LoadIDSATrack implements Traces {
         try {
             conf.loadFile();
             this.source = conf.getIDSATraces();
+
             Double length = conf.getMaxLength();
             //if length is set to 999999.0 it means no limit
             if(length == 999999.0){
@@ -40,8 +42,12 @@ public class LoadIDSATrack implements Traces {
             }else{
                 this.max_length = length;
             }
+
+            this.translation = conf.getTranslate();
         } catch (Exception e){
             this.source = null;
+            this.translation = Boolean.FALSE;
+            this.max_length = Double.MAX_VALUE;
         }
 
     }
@@ -80,8 +86,11 @@ public class LoadIDSATrack implements Traces {
                     trajectory.setFullLoad(Boolean.TRUE);
                     //set first point
                     List<String> firstElement = Arrays.asList(splittedList.get(0).split(","));
-                    //trajectory.setFirstPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1))), root));
-                    trajectory.setFirstPoint(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1))));
+                    if (this.translation){
+                        trajectory.setFirstPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1))), root));
+                    }else{
+                        trajectory.setFirstPoint(new Point(Double.parseDouble(firstElement.get(0)),Double.parseDouble(firstElement.get(1))));
+                    }
 
                     //Remove the first trajectory
                     splittedList = splittedList.subList(1, splittedList.size());
@@ -89,8 +98,11 @@ public class LoadIDSATrack implements Traces {
                         if(!Objects.equals(el, " ")) {
                             List<String> elements = Arrays.asList(el.split(","));
                             try {
-                                //trajectory.addPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(elements.get(0)), Double.parseDouble(elements.get(1))), root));
-                                trajectory.addPoint(new Point(Double.parseDouble(elements.get(0)), Double.parseDouble(elements.get(1))));
+                                if (this.translation){
+                                    trajectory.addPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(elements.get(0)), Double.parseDouble(elements.get(1))), root));
+                                }else{
+                                    trajectory.addPoint(new Point(Double.parseDouble(elements.get(0)), Double.parseDouble(elements.get(1))));
+                                }
                             } catch (Exception e) {
                                 String a = "";
                             }
@@ -99,9 +111,13 @@ public class LoadIDSATrack implements Traces {
 
                     //set last point
                     List<String> lastElement = Arrays.asList(splittedList.get(splittedList.size() - 2).split(","));
-                    //trajectory.setLastPoint(this.convertFromUTMtoDeg(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1))), root));
 //                    trajectory.setLastPoint(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1))));
-                    Point lastPoint = new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1)));
+                    Point lastPoint;
+                    if (this.translation){
+                        lastPoint = this.convertFromUTMtoDeg(new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1))), root);
+                    }else{
+                        lastPoint = new Point(Double.parseDouble(lastElement.get(0)),Double.parseDouble(lastElement.get(1)));
+                    }
                     trajectory.setLastPoint(lastPoint);
                     //always add the end point to the list that contains all the POIs
                     trajectories.addPOItoTotalList(new POI(lastPoint));
@@ -115,8 +131,12 @@ public class LoadIDSATrack implements Traces {
                     splittedList.stream().forEach(s -> {
                         if (!Objects.equals(s, " ")) {
                             List<String> el = Arrays.asList(s.split(","));
-                            //Point point = this.convertFromUTMtoDeg(new Point(Double.parseDouble(el.get(0)),Double.parseDouble(el.get(1))), root);
-                            Point point = new Point(Double.parseDouble(el.get(0)),Double.parseDouble(el.get(1)));
+                            Point point;
+                            if (this.translation){
+                                point = this.convertFromUTMtoDeg(new Point(Double.parseDouble(el.get(0)),Double.parseDouble(el.get(1))), root);
+                            }else {
+                                point = new Point(Double.parseDouble(el.get(0)), Double.parseDouble(el.get(1)));
+                            }
                             Double lat = point.getLatitude();
                             Double lon = point.getLongitude();
                             minValue.setLatitude(Math.min(minValue.getLatitude(), lat));
