@@ -2,14 +2,11 @@ package lgds.load_track;
 
 import lgds.POI.POI;
 import lgds.config.ConfigFile;
-import lgds.routing.Routing;
 import lgds.trajectories.Point;
 import lgds.trajectories.Trajectories;
 import lgds.trajectories.Trajectory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -29,7 +26,7 @@ public class LoadTrack implements Traces {
     private String source; //location of the gps data
     private Double max_length; //max length trajectory
     /**
-     * Scan the folder (hardcoded location) and load in memory all the trajectories
+     * Scan the folder and load in memory all the trajectories
      * Load position trajectories reading the path from file
      */
     public LoadTrack(){
@@ -54,7 +51,7 @@ public class LoadTrack implements Traces {
 
 
     /**
-     * Scan the folder (hardcoded location) and load in memory all the trajectories
+     * Scan the folder and load in memory all the trajectories
      * This method is specific for the Geolife trajectories 1.3 download data
      * Every subfolder is a different person
      * Every person has a folder trajectory containing all his trajectories

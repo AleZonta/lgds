@@ -1,5 +1,7 @@
 package lgds.trajectories;
 
+import java.time.LocalTime;
+
 /**
  * Created by alessandrozonta on 23/09/16.
  * This class contains the single point of a trajectory
@@ -130,6 +132,66 @@ public class Point {
         }catch (Exception e){
             return point.latitude.equals(this.latitude) && point.longitude.equals(this.longitude);
         }
+    }
+
+
+    /**
+     * Subtract the time
+     * @param secondPoint point in the past that is subtract to this point
+     * @return integer second of difference between two times
+     * @throws Exception if something goes wrong
+     */
+    public Integer differenceInTime(Point secondPoint) throws Exception {
+        //this - second
+        LocalTime timeThis = LocalTime.parse(this.getTime());
+        LocalTime timeSecond = LocalTime.parse(secondPoint.getTime());
+        Integer seconds = 0;
+        Integer minutes = 0;
+        Integer hours = 0;
+        Integer firstSeconds = timeThis.getSecond();
+        Integer secondSeconds = timeSecond.getSecond();
+        Integer firstMinutes = timeThis.getMinute();
+        Integer secondMinutes = timeSecond.getMinute();
+        Integer firstHours = timeThis.getHour();
+        Integer secondHours = timeSecond.getHour();
+        if(firstSeconds >= secondSeconds){
+            seconds = firstSeconds - secondSeconds;
+        } else {
+            if(firstMinutes > 0){
+                firstMinutes--;
+                firstSeconds += 60;
+                seconds = firstSeconds - secondSeconds;
+            }else{
+                if(firstHours > 0){
+                    firstHours--;
+                    firstMinutes += 60;
+                    firstMinutes--;
+                    firstSeconds += 60;
+                    seconds = firstSeconds - secondSeconds;
+                }else{
+                    throw new Exception("Error with the data");
+                }
+            }
+        }
+        if(firstMinutes >= secondMinutes){
+            minutes = firstMinutes - secondMinutes;
+        }else{
+            if(firstHours > 0){
+                firstHours--;
+                firstMinutes += 60;
+                minutes = firstMinutes - secondMinutes;
+            }else{
+                throw new Exception("Error with the data");
+            }
+        }
+        if(firstHours >= secondHours){
+            hours = firstHours - secondHours;
+        }else{
+            throw new Exception("Error with the data");
+        }
+        Integer hoursToSecond = hours * 60 * 60;
+        Integer minutesToSecond = minutes * 60;
+        return seconds + hoursToSecond + minutesToSecond;
     }
 
 }
