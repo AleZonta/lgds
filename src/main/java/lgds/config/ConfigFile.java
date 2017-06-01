@@ -87,4 +87,19 @@ public class ConfigFile {
     public Boolean getTranslate() {
         return this.translate;
     }
+
+    @Override
+    public String toString() {
+        return "ConfigFile{" + "\n" +
+                "currentPath='" + currentPath + '\'' + "\n" +
+                ", IDSATraces='" + IDSATraces + '\'' + "\n" +
+                ", GeoLifeTrace='" + GeoLifeTrace + '\'' + "\n" +
+                ", GraphHopperPath='" + GraphHopperPath + '\'' + "\n" +
+                ", GoogleAPIKey='" + GoogleAPIKey + '\'' + "\n" +
+                ", GraphHopperName='" + GraphHopperName + '\'' + "\n" +
+                ", DBSCANratio=" + DBSCANratio + "\n" +
+                ", maxLength=" + maxLength + "\n" +
+                ", translate=" + translate + "\n" +
+                '}';
+    }
 }

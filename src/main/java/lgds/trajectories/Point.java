@@ -134,6 +134,15 @@ public class Point {
         }
     }
 
+    /**
+     * Override method print object to string
+     * @return
+     */
+    @Override
+    public String toString() {
+        return "(" + this.latitude + ", " + this.longitude + ")";
+    }
+
 
     /**
      * Subtract the time
@@ -169,7 +178,12 @@ public class Point {
                     firstSeconds += 60;
                     seconds = firstSeconds - secondSeconds;
                 }else{
-                    throw new Exception("Error with the data");
+                    if(firstHours == 0) {
+                        firstSeconds += 60;
+                        seconds = firstSeconds - secondSeconds;
+                    }else {
+                        throw new Exception("Error with the data");
+                    }
                 }
             }
         }
@@ -181,13 +195,17 @@ public class Point {
                 firstMinutes += 60;
                 minutes = firstMinutes - secondMinutes;
             }else{
-                throw new Exception("Error with the data");
+                if(firstHours != 0) {
+                    throw new Exception("Error with the data");
+                }
             }
         }
         if(firstHours >= secondHours){
             hours = firstHours - secondHours;
         }else{
-            throw new Exception("Error with the data");
+            if(firstHours != 0) {
+                throw new Exception("Error with the data");
+            }
         }
         Integer hoursToSecond = hours * 60 * 60;
         Integer minutesToSecond = minutes * 60;
