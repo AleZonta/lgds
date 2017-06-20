@@ -14,6 +14,14 @@ import org.junit.Test;
  */
 public class PointTest {
     @Test
+    public void addTimeToPointAndReturn() throws Exception {
+        Point a = new Point(39.9766333333333,116.3378,278.871391076115,39303.0250694444,"2007-08-09","00:36:06");
+        Point b = new Point(39.9766333333333,116.3378,278.871391076115,39303.0250694444,"2007-08-09", a.addTimeToPoint(2.0));
+        System.out.println(b.getTime());
+
+    }
+
+    @Test
     public void differenceInTime() throws Exception {
         Point a = new Point(39.9766333333333,116.3378,278.871391076115,39303.0250694444,"2007-08-09","00:36:06");
         Point b = new Point(39.97655,116.337916666667,278.871391076115,39303.0285763889,"2007-08-09","00:41:09");

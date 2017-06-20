@@ -212,4 +212,15 @@ public class Point {
         return seconds + hoursToSecond + minutesToSecond;
     }
 
+
+    /**
+     * Add tot second to the time expressed
+     * @param addend time to add
+     * @return second value of the current time plus the time to add
+     */
+    public String addTimeToPoint(Double addend){
+        //this + addend
+        LocalTime timeThis = LocalTime.parse(this.getTime());
+        return timeThis.plusSeconds(addend.intValue()).toString();
+    }
 }
