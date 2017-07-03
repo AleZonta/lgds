@@ -223,4 +223,12 @@ public class Point {
         LocalTime timeThis = LocalTime.parse(this.getTime());
         return timeThis.plusSeconds(addend.intValue()).toString();
     }
+
+    /**
+     * Deep copy of the object
+     * @return new object with the same characteristics
+     */
+    public Point deepCopy(){
+        return new Point(this.latitude, this.longitude, this.altitude, this.dated, this.dates, this.time);
+    }
 }
