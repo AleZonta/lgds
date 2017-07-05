@@ -2,7 +2,7 @@
 Load GPS trajectories from file and simulate the people movement using those trajectories
 
 This project implements classes to load trajectories datasets from file/files and simulate the movement of the people following the trajectories just uploaded.
-Now the project support the [https://www.microsoft.com/en-us/download/details.aspx?id=52367&from=http%3A%2F%2Fresearch.microsoft.com%2Fen-us%2Fdownloads%2Fb16d359d-d164-469e-9fd4-daa38f2b2e13%2F](Geolife Dataset) and the trace obtained running the [https://github.com/TNOCS/idsa](IDSA simulator)
+Now the project support the [Geolife Dataset](https://www.microsoft.com/en-us/download/details.aspx?id=52367&from=http%3A%2F%2Fresearch.microsoft.com%2Fen-us%2Fdownloads%2Fb16d359d-d164-469e-9fd4-daa38f2b2e13%2F) and the trace obtained running the [IDSA Simulator](https://github.com/TNOCS/idsa)
 
 
 ## How to build
