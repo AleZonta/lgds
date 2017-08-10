@@ -20,7 +20,7 @@ public class ViewTest {
 
     @Test
     /**
-     * test if the method run works
+     * readFileAndCreateDB if the method run works
      */
     public void showMap() throws Exception {
         View v = new View();

@@ -1,7 +1,6 @@
 package lgds.trajectories;
 
 import lgds.Distance.Distance;
-import lgds.load_track.LoadTrack;
 import lgds.load_track.Traces;
 
 import java.util.ArrayList;
@@ -156,4 +155,15 @@ public class Trajectory {
         this.currentReadPosition = 0;
         this.reachEndFile = Boolean.FALSE;
     }
+
+    /**
+     * Reset the reading but not the points
+     */
+    public void softResetTrajectory(){
+        this.currentReadPosition = 0;
+        this.reachEndFile = Boolean.FALSE;
+    }
+
+
+
 }

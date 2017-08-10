@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  */
 public class PathFinderGoogleTest {
     /**
-     * test if it returns the list of the steps to go from source to destination
+     * readFileAndCreateDB if it returns the list of the steps to go from source to destination
      * @throws Exception
      */
     @Test
@@ -40,7 +40,7 @@ public class PathFinderGoogleTest {
     }
 
     /**
-     * Method to test if the service is able to find the direction from source to destination
+     * Method to readFileAndCreateDB if the service is able to find the direction from source to destination
      * @throws Exception
      */
     @Test
@@ -54,7 +54,7 @@ public class PathFinderGoogleTest {
     }
 
     /**
-     * This method test if it loads correctly everything
+     * This method readFileAndCreateDB if it loads correctly everything
      * @throws Exception
      */
     @Test

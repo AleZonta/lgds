@@ -13,13 +13,18 @@ public class ConfigFileTest {
     public void loadFile() throws Exception {
         ConfigFile file = new ConfigFile();
         file.loadFile();
-        assertEquals("/Users/alessandrozonta/PycharmProjects/createTraces/traces.txt", file.getIDSATraces());
-        assertEquals("/Users/alessandrozonta/Downloads/Geolife trajectories 1.3/Data", file.getGeoLifeTrace());
-        assertEquals("/Users/alessandrozonta/Documents/lgds/", file.getGraphHopperPath());
-        assertEquals("AIzaSyDL8Wc8VXGYPTiFMSTAtj7mKQZukTRawac", file.getGoogleAPIKey());
-        assertEquals("china-latest.osm.pbf", file.getGraphHopperName());
-        assertEquals(new Double(4000), file.getMaxLength());
-        assertEquals(new Integer(40), file.getDBSCANradio());
+        assertNotEquals("", file.getIDSATraces());
+        assertNotEquals("", file.getGeoLifeTrace());
+        assertNotEquals("", file.getGraphHopperPath());
+        assertNotEquals("", file.getGoogleAPIKey());
+        assertNotEquals("", file.getGraphHopperName());
+        assertNotNull(file.getIDSATraces());
+        assertNotNull(file.getGeoLifeTrace());
+        assertNotNull(file.getGraphHopperPath());
+        assertNotNull(file.getGoogleAPIKey());
+        assertNotNull(file.getGraphHopperName());
+        assertTrue(file.getMaxLength() < 10000 && file.getMaxLength() > 0);
+        assertTrue(file.getDBSCANradio() < 10000 && file.getDBSCANradio() > 0);
     }
 
 }

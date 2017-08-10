@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by alessandrozonta on 23/09/16.
@@ -24,6 +25,10 @@ public class Trajectories {
     private Point utmRoot; //root of the word
     private Point whWorld; // width and height of the word
     private Integer DBSCANratio; //ratio dbscan
+    private Boolean trainTest; //if I am dividing the trajectories in training and readFileAndCreateDB set
+    private List<Trajectory> trainTrajectories; // all the trajectories
+    private List<Trajectory> testTrajectories; // all the trajectories
+
 
     /**
      * Default constructor
@@ -41,7 +46,9 @@ public class Trajectories {
         } catch (Exception e) {
             this.DBSCANratio = 40;
         }
-
+        this.trainTest = Boolean.FALSE;
+        this.trainTrajectories = new ArrayList<>();
+        this.testTrajectories = new ArrayList<>();
     }
 
     /**
@@ -240,4 +247,66 @@ public class Trajectories {
         Distance dis = new Distance();
         return dis.compute(doubles, doubles1);
     }
+
+
+    /**
+     * Create the training and readFileAndCreateDB set
+     */
+    public void createTrainingAndTest(){
+        this.trainTest = Boolean.TRUE;
+        //I am creating 80% of the trajectories as training and 20% as readFileAndCreateDB
+        this.trajectories.forEach(trajectory -> {
+            Double val = ThreadLocalRandom.current().nextDouble();
+            if(val <= 0.8){
+                this.trainTrajectories.add(trajectory);
+            }else{
+                this.testTrajectories.add(trajectory);
+            }
+        });
+    }
+
+    /**
+     * Create the training and readFileAndCreateDB set
+     * Limit the total number of entries
+     * @param number number of entries
+     */
+    public void createTrainingAndTest(Integer number){
+        this.trainTest = Boolean.TRUE;
+        //I am creating 80% of the trajectories as training and 20% as readFileAndCreateDB
+        if(number > this.trajectories.size()){
+            this.createTrainingAndTest();
+        }else{
+            for (int i = 0; i < number; i++){
+                Double val = ThreadLocalRandom.current().nextDouble();
+                if(val <= 0.8){
+                    this.trainTrajectories.add(this.trajectories.get(i));
+                }else{
+                    this.testTrajectories.add(this.trajectories.get(i));
+                }
+            }
+        }
+    }
+
+
+
+    /**
+     * Switch total trajectories to the train subset
+     * @exception Exception if the training readFileAndCreateDB is not created
+     */
+    public void switchToTrain() throws Exception {
+        if(!this.trainTest) throw new Exception("No training set created!");
+        this.trajectories = this.trainTrajectories;
+    }
+
+    /**
+     * Switch total trajectories to the readFileAndCreateDB subset
+     *  @exception Exception if the training readFileAndCreateDB is not created
+     */
+    public void switchToTest() throws Exception {
+        if(!this.trainTest) throw new Exception("No training set created!");
+        this.trajectories = this.testTrajectories;
+    }
+
+
+
 }

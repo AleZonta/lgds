@@ -42,7 +42,7 @@ public class View {
     private Double alpha; //threshold angle
 
     /**
-     * constructor for test
+     * constructor for readFileAndCreateDB
      */
     public View(){
         this.listPoint = new LinkedHashMap<>();

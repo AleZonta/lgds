@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class SimulatorTest {
     @Test
     /**
-     * test if the method run works
+     * readFileAndCreateDB if the method run works
      */
     public void run() throws Exception {
         Simulator sim = new Simulator();

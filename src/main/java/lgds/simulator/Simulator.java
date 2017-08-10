@@ -88,7 +88,7 @@ public class Simulator implements SimulatorInterface {
 
 
     /**
-     * method to test if graphHopper works with our data
+     * method to readFileAndCreateDB if graphHopper works with our data
      */
     public void work(){
     //run the simulator
