@@ -3,12 +3,16 @@ package lgds.map;
 import Connections.DatabaseEntity;
 import crosby.binary.osmosis.OsmosisReader;
 import lgds.config.ConfigFile;
+import lgds.trajectories.Point;
 import org.json.simple.parser.ParseException;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +29,7 @@ public class OsmosisLoader {
      * Constructor zero parameters
      * Loads the db
      */
-    public OsmosisLoader(){
+    public OsmosisLoader() throws FileNotFoundException {
         this.db = new DatabaseEntity();
     }
 
@@ -74,13 +78,51 @@ public class OsmosisLoader {
 
 
     /**
+     * Open the database
+     * @throws SQLException if something wrong happens
+     */
+    public void openDB() throws SQLException {
+        this.db.setConnection();
+    }
+
+    /**
      * Return what there is in the position passed as parameter
      * @param lat latitude of the position
      * @param lon longitude of the position
      * @return string contianing the result
      */
-    public String  findIfThereIsSomethingInPosition(Double lat, Double lon){
+    public String findIfThereIsSomethingInPositionBis(Double lat, Double lon) throws SQLException {
+        return this.db.readDataBis(lat,lon);
+    }
+
+
+    /**
+     * Close the database
+     * @throws SQLException if something wrong happens
+     */
+    public void closeDB() throws SQLException {
+        this.db.closeConnection();
+    }
+
+    /**
+     * Return what there is in the position passed as parameter
+     * @param lat latitude of the position
+     * @param lon longitude of the position
+     * @return string contianing the result
+     */
+    public String findIfThereIsSomethingInPosition(Double lat, Double lon){
         return this.db.readData(lat,lon);
     }
 
+
+    /**
+     * obtain coordinates
+     * @return list of points
+     */
+    public List<Point> obtainCoordinates(){
+        List<DatabaseEntity.Point> p = this.db.obtainCoordinates();
+        List<Point> points = new ArrayList<>();
+        p.forEach(point -> points.add(new Point(point.getLat(), point.getLon())));
+        return points;
+    }
 }

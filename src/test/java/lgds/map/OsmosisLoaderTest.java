@@ -1,5 +1,6 @@
 package lgds.map;
 
+import lgds.trajectories.Point;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,6 +12,13 @@ import static org.junit.Assert.assertEquals;
  * Created by alessandrozonta on 09/08/2017.
  */
 public class OsmosisLoaderTest {
+    @Test
+    public void obtainCoordinates() throws Exception {
+        OsmosisLoader l = new OsmosisLoader();
+        List<Point> p = l.obtainCoordinates();
+        assertNotNull(p);
+    }
+
     @Test
     public void readFileAndCreateDB() throws Exception {
         //OsmosisLoader l = new OsmosisLoader();

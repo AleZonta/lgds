@@ -138,12 +138,12 @@ public class Trajectories {
             }
         }
 
-        System.out.println("Clustering the POI...");
+        //System.out.println("Clustering the POI...");
         Distance dis = new Distance();
         //dbscan parameters (distance in metres, minimum number of element, distance measure)
         Clusterer<POI> dbscan = new DBSCANClusterer<POI>(this.DBSCANratio, 0, dis);
         this.listOfPOIsClustered = dbscan.cluster(appo_list);
-        System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " number of POIs");
+        //System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " number of POIs");
     }
 
     /**
@@ -186,12 +186,12 @@ public class Trajectories {
         }
 
 
-        System.out.println("Clustering the POI...");
+        //System.out.println("Clustering the POI...");
         Distance dis = new Distance();
         //dbscan parameters (distance in metres, minimum number of element, distance measure)
         Clusterer<POI> dbscan = new DBSCANClusterer<POI>(this.DBSCANratio, 0, dis);
         this.listOfPOIsClustered = dbscan.cluster(appo_list);
-        System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " POIs");
+        //System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " POIs");
 
     }
 
