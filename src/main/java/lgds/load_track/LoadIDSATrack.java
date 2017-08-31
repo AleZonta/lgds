@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -24,6 +26,7 @@ public class LoadIDSATrack implements Traces {
     private String source; //location of the gps data
     private Double max_length; //max length trajectory
     private Boolean translation; // do i have to translate the coordinates
+    private static final Logger logger = Logger.getLogger(LoadIDSATrack.class.getName()); //logger for this class
 
     /**
      * Load position trajectories reading the path from file
@@ -198,9 +201,10 @@ public class LoadIDSATrack implements Traces {
 
         // With this coordinate this is not the root.
         //I need to find it on IDSA and hard code it here
-        trajectories.setRootAndWhWorld(root, new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
-        System.out.println("Max length selected is " + this.max_length);
-        System.out.println("From " + totalTrajectories[0] + " to " + trajectories.getTrajectories().size() + " trajectories loaded");
+        trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(),minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
+//        System.out.println("Max length selected is " + this.max_length);
+//        System.out.println("From " + totalTrajectories[0] + " to " + trajectories.getTrajectories().size() + " trajectories loaded");
+        logger.log(Level.INFO,"From " + totalTrajectories[0] + " to " + trajectories.getTrajectories().size() + " trajectories loaded");
         return trajectories;
     }
 
