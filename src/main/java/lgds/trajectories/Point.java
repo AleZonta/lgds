@@ -231,4 +231,25 @@ public class Point {
     public Point deepCopy(){
         return new Point(this.latitude, this.longitude, this.altitude, this.dated, this.dates, this.time);
     }
+
+    /**
+     * Computes the Euclidean distance from this point to the other.
+     *
+     * @param o1 other point.
+     * @return euclidean distance.
+     */
+    public double euclideanDistance(Point o1) {
+        return euclideanDistance(o1, this);
+    }
+
+    /**
+     * Computes the Euclidean distance from one point to the other.
+     *
+     * @param o1 first point.
+     * @param o2 second point.
+     * @return euclidean distance.
+     */
+    private double euclideanDistance(Point o1, Point o2) {
+        return Math.sqrt(Math.pow((o1.getLatitude() - o2.getLatitude()), 2) + Math.pow((o1.getLongitude() - o2.getLongitude()), 2));
+    }
 }
