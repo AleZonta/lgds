@@ -3,6 +3,7 @@ package lgds.trajectories;
 import lgds.Distance.Distance;
 import lgds.POI.POI;
 import lgds.config.ConfigFile;
+import lgds.load_track.Traces;
 import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.Clusterer;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
@@ -308,5 +309,38 @@ public class Trajectories {
     }
 
 
+    /**
+     * Skip some of the points
+     * Expecially for IDSA
+     * 1 timestep every 5
+     * @param storage {@link Traces} object
+     */
+    public void makeTrajectoriesSeemReal(Traces storage){
+        List<Trajectory> realTrajectories = new ArrayList<>();
+        this.trajectories.forEach(tra -> {
+            //check the trajectory
+            Trajectory newTrajectory = new Trajectory();
+
+            Point currentPosition = tra.getNextPoint(storage);
+            newTrajectory.addPoint(currentPosition);
+            int size = 1;
+            int count = 1;
+            while(currentPosition!= null){
+                currentPosition = tra.getNextPoint(storage);
+                count ++;
+                if(count == 5){
+                    newTrajectory.addPoint(currentPosition);
+                    size ++;
+                    count = 0;
+                }
+            }
+            newTrajectory.setSize(size);
+            realTrajectories.add(newTrajectory);
+
+//            System.out.println(tra.getSize() + " ----> " + newTrajectory.getSize());
+        });
+        this.trajectories = realTrajectories;
+
+    }
 
 }

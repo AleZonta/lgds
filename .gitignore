@@ -1,7 +1,5 @@
 
 *.class
-
-*.xml
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -92,3 +90,13 @@ lgds.iml
 lgds.iml
 
 *.db
+.idea/inspectionProfiles/
+target/generated-sources/
+target/generated-test-sources/
+.idea/compiler.xml
+
+.idea/copyright/profiles_settings.xml
+
+.idea/encodings.xml
+.idea/*
+dependency-reduced-pom.xml

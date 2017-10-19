@@ -12,6 +12,31 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TrajectoriesTest {
     @Test
+    public void makeTrajectoriesSeemReal() throws Exception {
+        LoadIDSATrack track = new LoadIDSATrack();
+        Trajectories tra = track.loadTrajectories();
+        tra.makeTrajectoriesSeemReal(track);
+    }
+
+    @Test
+    public void getUtmRoot() throws Exception {
+        LoadIDSATrack track = new LoadIDSATrack();
+        Trajectories tra = track.loadTrajectories();
+        assertNotNull(tra.getUtmRoot());
+        System.out.println(tra.getUtmRoot());
+        System.out.println(tra.getUtmRoot().getLatitude()+tra.getWhWorld().getLatitude());
+        System.out.println(tra.getUtmRoot().getLongitude()+tra.getWhWorld().getLongitude());
+    }
+
+    @Test
+    public void getWhWorld() throws Exception {
+        LoadIDSATrack track = new LoadIDSATrack();
+        Trajectories tra = track.loadTrajectories();
+        assertNotNull(tra.getWhWorld());
+        System.out.println(tra.getWhWorld());
+    }
+
+    @Test
     public void createTrainingAndTest() throws Exception {
         LoadIDSATrack track = new LoadIDSATrack();
         Trajectories tra = track.loadTrajectories();

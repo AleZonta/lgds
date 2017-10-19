@@ -1,6 +1,6 @@
 {
   "IDSATraces": "/Users/alessandrozonta/Documents/ResultsExp/traces/traces.txt",
-  "translate": 0,
+  "translate": 1,
   "GeoLifeTrace": "/Users/alessandrozonta/Downloads/Geolife trajectories 1.3/Data",
   "GraphHopperPath": "/Users/alessandrozonta/Documents/lgds/",
   "GoogleAPIKey": "AIzaSyDL8Wc8VXGYPTiFMSTAtj7mKQZukTRawac",
