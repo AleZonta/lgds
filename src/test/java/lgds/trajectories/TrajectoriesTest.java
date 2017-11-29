@@ -12,6 +12,13 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TrajectoriesTest {
     @Test
+    public void analiseSpeedTrajectories() throws Exception {
+        LoadIDSATrack track = new LoadIDSATrack();
+        Trajectories tra = track.loadTrajectories();
+        tra.analiseSpeedTrajectories(0,track);
+    }
+
+    @Test
     public void makeTrajectoriesSeemReal() throws Exception {
         LoadIDSATrack track = new LoadIDSATrack();
         Trajectories tra = track.loadTrajectories();

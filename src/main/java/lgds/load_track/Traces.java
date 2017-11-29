@@ -24,4 +24,5 @@ public interface Traces {
      * @return the new point read from file
      */
     Point loadTrajectory(String path, Integer position);
+
 }
