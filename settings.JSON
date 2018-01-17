@@ -1,5 +1,5 @@
 {
-  "IDSATraces": "/Users/alessandrozonta/Documents/ResultsExp/traces/traces.txt",
+  "IDSATraces": "/Users/alessandrozonta/Documents/lgds/tra.json",
   "translate": 1,
   "GeoLifeTrace": "/Users/alessandrozonta/Downloads/Geolife trajectories 1.3/Data",
   "GraphHopperPath": "/Users/alessandrozonta/Documents/lgds/",

@@ -3,9 +3,7 @@ package lgds.trajectories;
 import lgds.load_track.LoadIDSATrack;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by alessandrozonta on 01/08/2017.

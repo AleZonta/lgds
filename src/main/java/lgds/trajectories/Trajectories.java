@@ -373,9 +373,9 @@ public class Trajectories {
             }
 
         });
-        System.out.println("max -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble());
-        System.out.println("min -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble());
-        System.out.println("average -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble());
+        System.out.println("max -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble() * 3.6 + "km/h");
+        System.out.println("min -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble() * 3.6 + "km/h");
+        System.out.println("average -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble() * 3.6 + "km/h");
 
     }
 
