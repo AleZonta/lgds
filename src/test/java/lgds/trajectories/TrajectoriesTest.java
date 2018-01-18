@@ -1,9 +1,12 @@
 package lgds.trajectories;
 
+import lgds.load_track.LoadIDSAJson;
 import lgds.load_track.LoadIDSATrack;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by alessandrozonta on 01/08/2017.
@@ -11,7 +14,7 @@ import static org.junit.Assert.*;
 public class TrajectoriesTest {
     @Test
     public void analiseSpeedTrajectories() throws Exception {
-        LoadIDSATrack track = new LoadIDSATrack();
+        LoadIDSAJson track = new LoadIDSAJson();
         Trajectories tra = track.loadTrajectories();
         tra.analiseSpeedTrajectories(0,track);
     }

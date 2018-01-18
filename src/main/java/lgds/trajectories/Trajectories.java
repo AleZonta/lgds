@@ -121,22 +121,7 @@ public class Trajectories {
             if (increaseNumber + number > this.totalListOfPOIs.size()) {
                 increaseNumber = this.totalListOfPOIs.size() - number - 1;
             }
-            for (int i = 0; i < increaseNumber; i++) {
-                Integer val = rand.nextInt(this.totalListOfPOIs.size());
-                POI selected = this.totalListOfPOIs.get(val);
-                POI finalSelected = selected;
-                //check if the POI selected is already inside
-                Boolean present = appo_list.stream().filter(poi -> poi.equals(finalSelected)).findAny().isPresent();
-                while (present) {
-                    val = rand.nextInt(this.totalListOfPOIs.size());
-                    selected = this.totalListOfPOIs.get(val);
-                    POI finalSelected1 = selected;
-                    present = appo_list.stream().filter(poi -> poi.equals(finalSelected1)).findAny().isPresent();
-                }
-                //if not present inside add the POI to the two different lists
-                appo_list.add(selected);
-                this.listOfPOIs.add(selected);
-            }
+            addPOI(increaseNumber, rand, appo_list);
         }
 
         //System.out.println("Clustering the POI...");
@@ -147,54 +132,65 @@ public class Trajectories {
         //System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " number of POIs");
     }
 
-//    /**
-//     * Compute the list of POIs from the trajectories.
-//     * Every destinations are POIs
-//     * @param tra trajectory to use to produce the POIs
-//     * @param general if true I select only POIs from the subset loaded, if false I select randomly from the list with all the POIs
-//     * @param increaseNumber If general is false i add the increaseNumber of POIs to the list
-//     */
-//    public void computePOIs(List<Trajectory> tra, Boolean general, Integer increaseNumber){
-//        //store temporarily all the POIs here
-//        List<POI> appo_list = new ArrayList<>();
-//        tra.stream().forEach(trajectory -> appo_list.add(new POI(trajectory.getLastPoint())));
-//        tra.stream().forEach(trajectory -> this.listOfPOIs.add(new POI(trajectory.getLastPoint())));
-//
-//        //if general is True I add increaseNumber of POIs to the final number of POIs
-//        if (general) {
-//            //if the number is positive I will add that number of POI
-//            Random rand = new Random(23);
-//            //check increaseNumber
-//            if (increaseNumber + tra.size() > this.totalListOfPOIs.size()) {
-//                increaseNumber = this.totalListOfPOIs.size() - tra.size() - 1;
-//            }
-//            for (int i = 0; i < increaseNumber; i++) {
-//                Integer val = rand.nextInt(this.totalListOfPOIs.size());
-//                POI selected = this.totalListOfPOIs.get(val);
-//                POI finalSelected = selected;
-//                //check if the POI selected is already inside
-//                Boolean present = appo_list.stream().filter(poi -> poi.equals(finalSelected)).findAny().isPresent();
-//                while (present) {
-//                    val = rand.nextInt(this.totalListOfPOIs.size());
-//                    selected = this.totalListOfPOIs.get(val);
-//                    POI finalSelected1 = selected;
-//                    present = appo_list.stream().filter(poi -> poi.equals(finalSelected1)).findAny().isPresent();
-//                }
-//                //if not present inside add the POI to the two different lists
-//                appo_list.add(selected);
-//                this.listOfPOIs.add(selected);
-//            }
-//        }
-//
-//
-//        //System.out.println("Clustering the POI...");
-//        Distance dis = new Distance();
-//        //dbscan parameters (distance in metres, minimum number of element, distance measure)
-//        Clusterer<POI> dbscan = new DBSCANClusterer<POI>(this.DBSCANratio, 0, dis);
-//        this.listOfPOIsClustered = dbscan.cluster(appo_list);
-//        //System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " POIs");
-//
-//    }
+
+    /**
+     * add point
+     * @param increaseNumber If general is false i add the increaseNumber of POIs to the list
+     * @param rand random number
+     * @param appo_list  store temporarily all the POIs here
+     */
+    private void addPOI(Integer increaseNumber, Random rand, List<POI> appo_list){
+        for (int i = 0; i < increaseNumber; i++) {
+            Integer val = rand.nextInt(this.totalListOfPOIs.size());
+            POI selected = this.totalListOfPOIs.get(val);
+            POI finalSelected = selected;
+            //check if the POI selected is already inside
+            boolean present = appo_list.stream().anyMatch(poi -> poi.equals(finalSelected));
+            while (present) {
+                val = rand.nextInt(this.totalListOfPOIs.size());
+                selected = this.totalListOfPOIs.get(val);
+                POI finalSelected1 = selected;
+                present = appo_list.stream().anyMatch(poi -> poi.equals(finalSelected1));
+            }
+            //if not present inside add the POI to the two different lists
+            appo_list.add(selected);
+            this.listOfPOIs.add(selected);
+        }
+    }
+
+    /**
+     * Compute the list of POIs from the trajectories.
+     * Every destinations are POIs
+     * @param tra trajectory to use to produce the POIs
+     * @param general if true I select only POIs from the subset loaded, if false I select randomly from the list with all the POIs
+     * @param increaseNumber If general is false i add the increaseNumber of POIs to the list
+     */
+    public void computePOIs(List<Trajectory> tra, Boolean general, Integer increaseNumber){
+        //store temporarily all the POIs here
+        List<POI> appo_list = new ArrayList<>();
+        tra.forEach(trajectory -> appo_list.add(new POI(trajectory.getLastPoint())));
+        tra.forEach(trajectory -> this.listOfPOIs.add(new POI(trajectory.getLastPoint())));
+
+        //if general is True I add increaseNumber of POIs to the final number of POIs
+        if (general) {
+            //if the number is positive I will add that number of POI
+            Random rand = new Random(23);
+            //check increaseNumber
+            if (increaseNumber + tra.size() > this.totalListOfPOIs.size()) {
+                increaseNumber = this.totalListOfPOIs.size() - tra.size() - 1;
+            }
+            addPOI(increaseNumber, rand, appo_list);
+        }
+
+
+        //System.out.println("Clustering the POI...");
+        Distance dis = new Distance();
+        //dbscan parameters (distance in metres, minimum number of element, distance measure)
+        Clusterer<POI> dbscan = new DBSCANClusterer<POI>(this.DBSCANratio, 0, dis);
+        this.listOfPOIsClustered = dbscan.cluster(appo_list);
+        //System.out.println("From " + appo_list.size() + " to " + this.listOfPOIsClustered.size() + " POIs");
+
+    }
 
     /**
      * set the root of the word and its dimension
@@ -360,12 +356,14 @@ public class Trajectories {
         }
         double finalTime = time;
         List<Double> speeds = new ArrayList<>();
+        List<Double> spaceTotals = new ArrayList<>();
         this.trajectories.forEach(tra -> {
             Point p = tra.getFirstPoint();
             Point p1 = tra.getNextPoint(storage);
             while (p1 != null){
                 //speed = space / time
                 double space = this.retDistanceUsingDistanceClass(new double[]{p.getLatitude(), p.getLongitude()}, new double[]{p1.getLatitude(), p1.getLongitude()});
+                spaceTotals.add(space);
                 speeds.add(space/finalTime);
                 //next two points
                 p = p1.deepCopy();
@@ -373,10 +371,15 @@ public class Trajectories {
             }
 
         });
+        System.out.println("Speed");
         System.out.println("max -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble() * 3.6 + "km/h");
         System.out.println("min -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble() * 3.6 + "km/h");
         System.out.println("average -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble() * 3.6 + "km/h");
 
+        System.out.println("Space");
+        System.out.println("max -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "m");
+        System.out.println("min -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "m");
+        System.out.println("average -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "m ");
     }
 
 }
