@@ -25,8 +25,8 @@ public class Trajectories {
     private List<POI> totalListOfPOIs; //list of all the end destination of the trajectories
     private Point utmRoot; //root of the word
     private Point whWorld; // width and height of the word
-    private Integer DBSCANratio; //ratio dbscan
-    private Boolean trainTest; //if I am dividing the trajectories in training and readFileAndCreateDB set
+    private int DBSCANratio; //ratio dbscan
+    private boolean trainTest; //if I am dividing the trajectories in training and readFileAndCreateDB set
     private List<Trajectory> trainTrajectories; // all the trajectories
     private List<Trajectory> testTrajectories; // all the trajectories
 

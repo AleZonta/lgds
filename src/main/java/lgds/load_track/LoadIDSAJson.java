@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -90,8 +89,7 @@ public class LoadIDSAJson implements Traces {
 
             Integer t = ((Long) jsonObject.get("size")).intValue();
 
-            IntStream.range(0, t).forEach(i -> {
-
+            for(int i = 0; i < t; i ++){
                 String name = "trajectory-" + i;
 
                 if (!this.limitation || this.limitation && allowedTrajectories.stream().anyMatch(n -> n.equals(name))) {
@@ -130,7 +128,7 @@ public class LoadIDSAJson implements Traces {
                     trajectory.setSize(allThePointsCorrected.size());
                     trajectories.addTrajectory(trajectory);
                 }
-            });
+            }
 
 
         } catch (ParseException | IOException e) {

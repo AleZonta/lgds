@@ -40,7 +40,7 @@ public class CustomSink implements Sink {
         if (entity.getTags().size() > 0) {
 
 
-            if(entity.getTags().stream().filter(tag -> tag.getKey().equals("amenity")).findAny().isPresent()){
+            if(entity.getTags().stream().anyMatch(tag -> tag.getKey().equals("amenity"))){
 //                this.amenityList.add(entity);
                 entity.getTags().stream().filter(tag -> tag.getKey().equals("amenity")).findAny().ifPresent(tag -> {
                     if(!this.singlename.containsKey(tag.getValue())){
@@ -51,7 +51,7 @@ public class CustomSink implements Sink {
                 });
             }
 
-            if(entity.getTags().stream().filter(tag -> tag.getKey().equals("building")).findAny().isPresent()){
+            if(entity.getTags().stream().anyMatch(tag -> tag.getKey().equals("building"))){
 //                this.building.add(entity);
                 entity.getTags().stream().filter(tag -> tag.getKey().equals("building")).findAny().ifPresent(tag -> {
                     if(!this.singlename.containsKey(tag.getValue())){

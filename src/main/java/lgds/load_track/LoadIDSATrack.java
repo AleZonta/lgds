@@ -24,8 +24,8 @@ import java.util.stream.Stream;
  */
 public class LoadIDSATrack implements Traces {
     private String source; //location of the gps data
-    private Double max_length; //max length trajectory
-    private Boolean translation; // do i have to translate the coordinates
+    private double max_length; //max length trajectory
+    private boolean translation; // do i have to translate the coordinates
     private static final Logger logger = Logger.getLogger(LoadIDSATrack.class.getName()); //logger for this class
 
     /**
@@ -97,7 +97,7 @@ public class LoadIDSATrack implements Traces {
 
                     //Remove the first trajectory
                     splittedList = splittedList.subList(1, splittedList.size());
-                    splittedList.stream().forEach(el -> {
+                    for(String el: splittedList){
                         if(!Objects.equals(el, " ")) {
                             List<String> elements = Arrays.asList(el.split(","));
                             try {
@@ -110,7 +110,7 @@ public class LoadIDSATrack implements Traces {
                                 String a = "";
                             }
                         }
-                    });
+                    }
 
                     //set last point
                     List<String> lastElement = Arrays.asList(splittedList.get(splittedList.size() - 2).split(","));
@@ -131,7 +131,7 @@ public class LoadIDSATrack implements Traces {
                     count[0]++;
 
                     //determine geo bounding box
-                    splittedList.stream().forEach(s -> {
+                    for(String s: splittedList){
                         if (!Objects.equals(s, " ")) {
                             List<String> el = Arrays.asList(s.split(","));
                             Point point;
@@ -147,7 +147,7 @@ public class LoadIDSATrack implements Traces {
                             maxValue.setLatitude(Math.max(maxValue.getLatitude(), lat));
                             maxValue.setLongitude(Math.max(maxValue.getLongitude(), lon));
                         }
-                    });
+                    }
 
                     //determine distance between points
                     List<String> el = Arrays.asList(splittedList.get(0).split(","));

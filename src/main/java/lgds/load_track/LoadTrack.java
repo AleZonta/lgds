@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  */
 public class LoadTrack implements Traces {
     private String source; //location of the gps data
-    private Double max_length; //max length trajectory
+    private double max_length; //max length trajectory
     /**
      * Scan the folder and load in memory all the trajectories
      * Load position trajectories reading the path from file
@@ -85,7 +85,7 @@ public class LoadTrack implements Traces {
             }
 
             //read all the trajectory files and load them
-            result.stream().forEach(path -> {
+            for(Path path: result){
                 //list containing all the single line of the file
                 //in the single line of the file there are the important info
                 List<String> list = new ArrayList<>();
@@ -119,7 +119,7 @@ public class LoadTrack implements Traces {
                 trajectory.setSize(list.size());
 
                 //determine geo bounding box
-                list.stream().forEach(s -> {
+                for(String s: list){
                     List<String> el = Arrays.asList(s.split(","));
                     Double lat = Double.parseDouble(el.get(0));
                     Double lon = Double.parseDouble(el.get(1));
@@ -127,7 +127,7 @@ public class LoadTrack implements Traces {
                     minValue.setLongitude(Math.min(minValue.getLongitude(), lon));
                     maxValue.setLatitude(Math.max(maxValue.getLatitude(), lat));
                     maxValue.setLongitude(Math.max(maxValue.getLongitude(), lon));
-                });
+                }
 
                 //determine distance between points
                 List<String> el = Arrays.asList(list.get(0).split(","));
@@ -155,7 +155,7 @@ public class LoadTrack implements Traces {
                     //}
                 }
 
-            });
+            }
         }
         trajectories.setRootAndWhWorld(new Point(minValue.getLatitude(), minValue.getLongitude()), new Point(maxValue.getLatitude() - minValue.getLatitude(), maxValue.getLongitude() - minValue.getLongitude()));
 
