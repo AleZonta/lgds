@@ -34,7 +34,7 @@ public class LoadIDSAJson extends LoadJson implements Traces {
         ConfigFile conf = new ConfigFile();
         try {
             conf.loadFile();
-            this.source = conf.getGeoLifeTrace();
+            this.source = conf.getIDSATraces();
             this.limitation = conf.getTranslate();
         } catch (Exception e){
             this.source = null;
