@@ -59,7 +59,12 @@ public abstract class LoadJson implements Traces{
 
                     List<Point> allThePoints = new ArrayList<>();
                     for (JSONArray aTra : (Iterable<JSONArray>) tra) {
-                        Point p = new Point((Double) aTra.get(0), (Double) aTra.get(1));
+                        Point p;
+                        if(aTra.size() == 2) {
+                            p = new Point((Double) aTra.get(0), (Double) aTra.get(1));
+                        }else{
+                            p = new Point((Double) aTra.get(0), (Double) aTra.get(1), (Double) aTra.get(2), (Double) aTra.get(3), (String) aTra.get(4), (String)aTra.get(5));
+                        }
                         minValue.setLatitude(Math.min(minValue.getLatitude(), p.getLatitude()));
                         minValue.setLongitude(Math.min(minValue.getLongitude(), p.getLongitude()));
                         maxValue.setLatitude(Math.max(maxValue.getLatitude(), p.getLatitude()));
