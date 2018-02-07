@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Created by Alessandro Zonta on 17/01/2018.
+ * Created by Alessandro Zonta on 07/02/2018.
  * PhD Situational Analytics
  * <p>
  * Computational Intelligence Group
@@ -21,20 +21,19 @@ import java.util.stream.Stream;
  * <p>
  * a.zonta@vu.nl
  */
-public class LoadIDSAJson extends LoadJson implements Traces {
+public class LoadTrackJson extends LoadJson implements Traces {
     private String source; //location of the gps data
     private boolean limitation; // do I load only trajectories on title file?
-
 
     /**
      * Load position trajectories reading the path from file
      */
-    public LoadIDSAJson(){
+    public LoadTrackJson(){
         // load config file
         ConfigFile conf = new ConfigFile();
         try {
             conf.loadFile();
-            this.source = conf.getGeoLifeTrace();
+            this.source = conf.getIDSATraces();
             this.limitation = conf.getTranslate();
         } catch (Exception e){
             this.source = null;
@@ -64,7 +63,7 @@ public class LoadIDSAJson extends LoadJson implements Traces {
 
         List<String> allowedTrajectories = new ArrayList<>();
         if(this.limitation){
-            String fileName = Paths.get(".").toAbsolutePath().normalize().toString() + "/goodTrajectories";
+            String fileName = Paths.get(".").toAbsolutePath().normalize().toString() + "/goodTrajectoriesGeolife";
             try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
                 stream.forEach(allowedTrajectories::add);
             } catch (IOException e) {
