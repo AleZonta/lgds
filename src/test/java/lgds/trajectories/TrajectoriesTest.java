@@ -1,12 +1,10 @@
 package lgds.trajectories;
 
-import lgds.load_track.LoadIDSAJson;
 import lgds.load_track.LoadIDSATrack;
+import lgds.load_track.LoadTrack;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by alessandrozonta on 01/08/2017.
@@ -14,9 +12,15 @@ import static org.junit.Assert.assertNotNull;
 public class TrajectoriesTest {
     @Test
     public void analiseSpeedTrajectories() throws Exception {
-        LoadIDSAJson track = new LoadIDSAJson();
+//        LoadIDSAJson track = new LoadIDSAJson();
+//        Trajectories tra = track.loadTrajectories();
+
+
+        LoadTrack track = new LoadTrack();
         Trajectories tra = track.loadTrajectories();
-        tra.analiseSpeedTrajectories(0,track);
+
+
+        tra.analiseSpeedTrajectories(1,track);
     }
 
     @Test

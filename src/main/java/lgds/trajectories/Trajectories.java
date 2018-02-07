@@ -8,6 +8,8 @@ import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.Clusterer;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -351,35 +353,73 @@ public class Trajectories {
         double time = 0;
         if(type == 0){
             time = 0.2;
-        }else{
-            throw new Exception("Not yet implemented");
-        }
-        double finalTime = time;
+        }//else{
+            //the time is going to be computed during the computation
+            //throw new Exception("Not yet implemented");
+        //}
         List<Double> speeds = new ArrayList<>();
         List<Double> spaceTotals = new ArrayList<>();
-        this.trajectories.forEach(tra -> {
+        List<Double> times = new ArrayList<>();
+        for(Trajectory tra: this.trajectories){
             Point p = tra.getFirstPoint();
             Point p1 = tra.getNextPoint(storage);
             while (p1 != null){
                 //speed = space / time
                 double space = this.retDistanceUsingDistanceClass(new double[]{p.getLatitude(), p.getLongitude()}, new double[]{p1.getLatitude(), p1.getLongitude()});
+
+
+                if(type == 1){
+                    //need to compute the time between the two points
+                    LocalTime pTime = LocalTime.parse(p.getTime());
+                    LocalTime p1Time = LocalTime.parse(p1.getTime());
+                    time = Duration.between(pTime, p1Time).toMillis() / 1000;
+                    if(time < 0) {
+                        //the two dates are over the day
+                        LocalTime localTime2 = LocalTime.of(23, 59, 59);
+                        double halftime = Duration.between(pTime, localTime2).toMillis() / 1000;
+                        LocalTime localTime3 = LocalTime.of(0, 0, 1);
+                        double halfSecontime = Duration.between(localTime3, p1Time).toMillis() / 1000;
+                        time = halfSecontime + halftime + 2;
+                    }
+                    times.add(time);
+                }
+
+
                 spaceTotals.add(space);
-                speeds.add(space/finalTime);
+                if(time == 0){
+                    speeds.add(0d);
+                }else{
+                    speeds.add(space/time);
+                }
                 //next two points
                 p = p1.deepCopy();
                 p1 = tra.getNextPoint(storage);
             }
 
-        });
+        }
+
+
+
         System.out.println("Speed");
         System.out.println("max -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble() * 3.6 + "km/h");
         System.out.println("min -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble() * 3.6 + "km/h");
         System.out.println("average -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble() * 3.6 + "km/h");
 
+        System.out.println("----------");
+
+        System.out.println("Time");
+        System.out.println("max -> " + times.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "s");
+        System.out.println("min -> " + times.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "s");
+        System.out.println("average -> " + times.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "s");
+
+        System.out.println("----------");
+
         System.out.println("Space");
         System.out.println("max -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "m");
         System.out.println("min -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "m");
-        System.out.println("average -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "m ");
+        System.out.println("average -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "m");
     }
+
+
 
 }
