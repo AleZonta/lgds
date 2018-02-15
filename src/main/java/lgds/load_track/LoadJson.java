@@ -51,6 +51,7 @@ public abstract class LoadJson implements Traces{
 
                 if (!limitation || limitation && allowedTrajectories.stream().anyMatch(n -> n.equals(name))) {
                     Trajectory trajectory = new Trajectory();
+                    trajectory.setPath(name);
                     //set full loaded to true
                     trajectory.setFullLoad(Boolean.TRUE);
 
@@ -58,12 +59,16 @@ public abstract class LoadJson implements Traces{
                     JSONArray tra = (JSONArray) ((JSONObject) jsonObject.get(name)).get("trajectory");
 
                     List<Point> allThePoints = new ArrayList<>();
+
+                    boolean removeLimitation = false;
                     for (JSONArray aTra : (Iterable<JSONArray>) tra) {
                         Point p;
                         if(aTra.size() == 2) {
                             p = new Point((Double) aTra.get(0), (Double) aTra.get(1));
                         }else{
                             p = new Point((Double) aTra.get(0), (Double) aTra.get(1), (Double) aTra.get(2), (Double) aTra.get(3), (String) aTra.get(4), (String)aTra.get(5));
+                            //if is Geolife I don't need the 15 limitation
+                            removeLimitation = true;
                         }
                         minValue.setLatitude(Math.min(minValue.getLatitude(), p.getLatitude()));
                         minValue.setLongitude(Math.min(minValue.getLongitude(), p.getLongitude()));
@@ -73,7 +78,10 @@ public abstract class LoadJson implements Traces{
                     }
 
                     List<Point> allThePointsCorrected = new ArrayList<>();
-                    if(limitation){
+                    boolean hereLimitation = true;
+                    if(removeLimitation) hereLimitation = false;
+                    if(!limitation) hereLimitation = false;
+                    if(hereLimitation){
                         for(int j = 0; j < allThePoints.size(); j += 15){
                             allThePointsCorrected.add(allThePoints.get(j));
                         }

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.DoubleStream;
 
 /**
  * Created by alessandrozonta on 23/09/16.
@@ -404,6 +405,11 @@ public class Trajectories {
         System.out.println("max -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).max().getAsDouble() * 3.6 + "km/h");
         System.out.println("min -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).min().getAsDouble() * 3.6 + "km/h");
         System.out.println("average -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "m/s -> " + speeds.stream().mapToDouble(Double::doubleValue).average().getAsDouble() * 3.6 + "km/h");
+        DoubleStream sortedAges = speeds.stream().mapToDouble(Double::doubleValue).sorted();
+        double median = speeds.size()%2 == 0?
+                sortedAges.skip(speeds.size()/2-1).limit(2).average().getAsDouble():
+                sortedAges.skip(speeds.size()/2).findFirst().getAsDouble();
+        System.out.println("median -> " + median + "m/s -> " + median * 3.6 + "km/h");
 
         System.out.println("----------");
 
@@ -411,13 +417,22 @@ public class Trajectories {
         System.out.println("max -> " + times.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "s");
         System.out.println("min -> " + times.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "s");
         System.out.println("average -> " + times.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "s");
-
+        sortedAges = times.stream().mapToDouble(Double::doubleValue).sorted();
+        median = times.size()%2 == 0?
+                sortedAges.skip(times.size()/2-1).limit(2).average().getAsDouble():
+                sortedAges.skip(times.size()/2).findFirst().getAsDouble();
+        System.out.println("median -> " + median + "m/s -> " + median * 3.6 + "km/h");
         System.out.println("----------");
 
         System.out.println("Space");
         System.out.println("max -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).max().getAsDouble() + "m");
         System.out.println("min -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).min().getAsDouble() + "m");
         System.out.println("average -> " + spaceTotals.stream().mapToDouble(Double::doubleValue).average().getAsDouble() + "m");
+        sortedAges = spaceTotals.stream().mapToDouble(Double::doubleValue).sorted();
+        median = spaceTotals.size()%2 == 0?
+                sortedAges.skip(spaceTotals.size()/2-1).limit(2).average().getAsDouble():
+                sortedAges.skip(spaceTotals.size()/2).findFirst().getAsDouble();
+        System.out.println("median -> " + median + "m/s -> " + median * 3.6 + "km/h");
     }
 
 
