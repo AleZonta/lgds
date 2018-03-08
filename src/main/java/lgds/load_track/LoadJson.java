@@ -35,7 +35,7 @@ public abstract class LoadJson implements Traces{
      * @param maxValue {@link Point} max coordinates value
      * @param trajectories {@link Trajectory} class containing all the trajectories
      */
-    protected void readFile(String source, boolean limitation, List<String> allowedTrajectories, Point minValue, Point maxValue,Trajectories trajectories){
+    protected void readFile(String source, boolean limitation, List<String> allowedTrajectories, Point minValue, Point maxValue,Trajectories trajectories, boolean avoid){
         //file is a json file, need to parse it and than I can read it
         FileReader reader;
         try {
@@ -49,7 +49,12 @@ public abstract class LoadJson implements Traces{
             for(int i = 0; i < t; i ++){
                 String name = "trajectory-" + i;
 
-                if (!limitation || limitation && allowedTrajectories.stream().anyMatch(n -> n.equals(name))) {
+
+                boolean cont = false;
+                if (!limitation || limitation && allowedTrajectories.stream().anyMatch(n -> n.equals(name)) && !avoid) cont = true;
+                if(avoid && allowedTrajectories.stream().noneMatch(n -> n.equals(name))) cont = true;
+
+                if (cont) {
                     Trajectory trajectory = new Trajectory();
                     trajectory.setPath(name);
                     //set full loaded to true

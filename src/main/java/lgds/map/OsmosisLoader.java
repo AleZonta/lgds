@@ -40,7 +40,7 @@ public class OsmosisLoader {
      * @throws IOException
      * @throws ParseException
      */
-    public void readFileAndCreateDB() throws IOException, ParseException {
+    public void readFileAndCreateDB() throws Exception {
         // load config file
         ConfigFile conf = new ConfigFile();
         conf.loadFile();

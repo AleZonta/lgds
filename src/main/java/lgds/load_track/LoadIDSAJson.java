@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 public class LoadIDSAJson extends LoadJson implements Traces {
     private String source; //location of the gps data
     private boolean limitation; // do I load only trajectories on title file?
+    private boolean avoid; // do I load only trajectories on title file?
 
 
     /**
@@ -36,6 +37,7 @@ public class LoadIDSAJson extends LoadJson implements Traces {
             conf.loadFile();
             this.source = conf.getIDSATraces();
             this.limitation = conf.getTranslate();
+            this.avoid = conf.getAvoid();
         } catch (Exception e){
             this.source = null;
             this.limitation = false;
@@ -73,7 +75,7 @@ public class LoadIDSAJson extends LoadJson implements Traces {
         }
 
         //file is a json file, need to parse it and than I can read it
-        super.readFile(this.source,this.limitation,allowedTrajectories,minValue,maxValue,trajectories);
+        super.readFile(this.source,this.limitation,allowedTrajectories,minValue,maxValue,trajectories, this.avoid);
 
         return trajectories;
     }
