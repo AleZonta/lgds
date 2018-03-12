@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -92,12 +93,13 @@ public class LoadETHPedestrian implements Traces {
             private double y;
             private int id;
 
-            public lineOfData(double x, double y, int id) {
+            private lineOfData(double x, double y, int id) {
                 this.x = x;
                 this.y = y;
                 this.id = id;
-
             }
+
+            private double getX(){return this.x;}
         }
 
         List<lineOfData> lines = new ArrayList<>();
@@ -112,6 +114,11 @@ public class LoadETHPedestrian implements Traces {
         List<Integer> ids = lines.stream().map(x -> x.id).distinct().collect(Collectors.toList());
         for(Integer id: ids){
             List<lineOfData> currentLines = lines.stream().filter(x -> x.id == id).collect(Collectors.toList());
+
+
+            //I have seen several trajectories with a lot of equals point. I do not want it
+            Map<Double, Long> valueCount = currentLines.stream().collect(Collectors.groupingBy(lineOfData::getX, Collectors.counting()));
+            if(valueCount.keySet().size() < currentLines.size()) continue;
 
             //skip if the line is too short
             if (currentLines.size() <= 3) continue;
@@ -154,6 +161,8 @@ public class LoadETHPedestrian implements Traces {
             trajectory.setPath(this.source);
             //set number of points
             trajectory.setSize(currentLines.size());
+
+
 
 
             trajectories.addTrajectory(trajectory);
