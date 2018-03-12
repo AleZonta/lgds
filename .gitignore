@@ -100,3 +100,11 @@ target/generated-test-sources/
 .idea/encodings.xml
 .idea/*
 dependency-reduced-pom.xml
+
+goodTrajectories
+
+goodTrajectoriesGeolife
+
+tra.json
+
+traGeolife.json

@@ -125,7 +125,7 @@ public class LoadETHPedestrian implements Traces {
             }
 
             Trajectory trajectory = new Trajectory();
-            trajectory.setFullLoad(Boolean.FALSE);
+            trajectory.setFullLoad(Boolean.TRUE);
 
             // timestep 0.4 seconds
             String nowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
