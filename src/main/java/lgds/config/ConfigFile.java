@@ -3,10 +3,8 @@ package lgds.config;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Paths;
 
 
@@ -20,9 +18,11 @@ public class ConfigFile {
     private String GraphHopperPath;
     private String GoogleAPIKey;
     private String GraphHopperName;
+    private String source;
     private Integer DBSCANratio;
     private Double maxLength; //if length is set to 999999.0 it means no limit
     private Boolean translate; //Do i have to translate the original coordinates (only for IDSA)
+    private Boolean avoid;
 
 
     //constructor
@@ -36,12 +36,14 @@ public class ConfigFile {
         this.DBSCANratio = null;
         this.maxLength = null;
         this.translate = null;
+        this.source = null;
+        this.avoid = Boolean.FALSE;
     }
 
     //method that reads the configfile
     //This method load the field from the JSON file.
     //Tested
-    public void loadFile() throws IOException, ParseException {
+    public void loadFile() throws Exception {
         FileReader reader = new FileReader(this.currentPath);
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -53,10 +55,20 @@ public class ConfigFile {
         this.GraphHopperName  = (String) jsonObject.get("GraphHopperName");
         this.DBSCANratio = ((Long) jsonObject.get("Radio")).intValue();
         this.maxLength = (Double) jsonObject.get("MaxLength");
+        this.source = (String) jsonObject.get("SourceTrajectories");
         if(((Long) jsonObject.get("translate")).intValue()==0){
             this.translate = Boolean.FALSE;
         }else{
-            this.translate = Boolean.TRUE;
+            if(((Long) jsonObject.get("translate")).intValue()==1){
+                this.translate = Boolean.TRUE;
+            }else{
+                if(((Long) jsonObject.get("translate")).intValue()==3){
+                    this.translate = Boolean.TRUE;
+                    this.avoid = Boolean.TRUE;
+                }else{
+                    throw new Exception("translate has a value not supported");
+                }
+            }
         }
     }
 
@@ -81,12 +93,16 @@ public class ConfigFile {
         return GraphHopperName;
     }
 
-    public Integer getDBSCANradio() { return this.DBSCANratio; }
+    public int getDBSCANradio() { return this.DBSCANratio; }
 
-    public Double getMaxLength() { return this.maxLength; }
+    public double getMaxLength() { return this.maxLength; }
 
-    public Boolean getTranslate() {
+    public boolean getTranslate() {
         return this.translate;
+    }
+
+    public boolean getAvoid() {
+        return this.avoid;
     }
 
     @Override
@@ -101,6 +117,12 @@ public class ConfigFile {
                 ", DBSCANratio=" + DBSCANratio + "\n" +
                 ", maxLength=" + maxLength + "\n" +
                 ", translate=" + translate + "\n" +
+                ", avoid=" + avoid + "\n" +
+                ", source=" + source + "\n" +
                 '}';
+    }
+
+    public String getSource() {
+        return source;
     }
 }

@@ -221,7 +221,7 @@ public class Point {
     public String addTimeToPoint(Double addend){
         //this + addend
         LocalTime timeThis = LocalTime.parse(this.getTime());
-        return timeThis.plusSeconds(addend.intValue()).toString();
+        return timeThis.plusNanos(new Double(addend * 1000000000.0).longValue()).toString();
     }
 
     /**
