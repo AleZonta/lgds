@@ -25,6 +25,7 @@ public class LoadTrackJson extends LoadJson implements Traces {
     private String source; //location of the gps data
     private boolean limitation; // do I load only trajectories on title file?
     private boolean avoid; // do I load only trajectories on title file?
+    private boolean smooting;
 
     /**
      * Load position trajectories reading the path from file
@@ -37,9 +38,11 @@ public class LoadTrackJson extends LoadJson implements Traces {
             this.source = conf.getGeoLifeTrace();
             this.limitation = conf.getTranslate();
             this.avoid = conf.getAvoid();
+            this.smooting = conf.getSmoother();
         } catch (Exception e){
             this.source = null;
             this.limitation = false;
+            this.smooting = false;
         }
 
     }
@@ -74,7 +77,7 @@ public class LoadTrackJson extends LoadJson implements Traces {
         }
 
         //file is a json file, need to parse it and than I can read it
-        super.readFile(this.source,this.limitation,allowedTrajectories,minValue,maxValue,trajectories, this.avoid);
+        super.readFile(this.source,this.limitation,allowedTrajectories,minValue,maxValue,trajectories, this.avoid, this.smooting);
 
         return trajectories;
     }

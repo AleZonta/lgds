@@ -158,7 +158,7 @@ public class LoadETHPedestrian implements Traces {
             //always add the end point to the list that contains all the POIs
             trajectories.addPOItoTotalList(new POI(lastPointReal));
             //set path
-            trajectory.setPath(this.source);
+            trajectory.setPath("Trajectory-" + id.toString());
             //set number of points
             trajectory.setSize(currentLines.size());
 

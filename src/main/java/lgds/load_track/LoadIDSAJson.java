@@ -75,7 +75,7 @@ public class LoadIDSAJson extends LoadJson implements Traces {
         }
 
         //file is a json file, need to parse it and than I can read it
-        super.readFile(this.source,this.limitation,allowedTrajectories,minValue,maxValue,trajectories, this.avoid);
+        super.readFile(this.source,this.limitation,allowedTrajectories,minValue,maxValue,trajectories, this.avoid, false);
 
         return trajectories;
     }

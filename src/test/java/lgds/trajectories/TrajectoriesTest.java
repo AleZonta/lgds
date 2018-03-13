@@ -1,7 +1,8 @@
 package lgds.trajectories;
 
+import lgds.load_track.LoadETHPedestrian;
 import lgds.load_track.LoadIDSATrack;
-import lgds.load_track.LoadTrack;
+import lgds.load_track.LoadTrackJson;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -15,12 +16,14 @@ public class TrajectoriesTest {
 //        LoadIDSAJson track = new LoadIDSAJson();
 //        Trajectories tra = track.loadTrajectories();
 
+        LoadTrackJson track0 = new LoadTrackJson();
+        Trajectories tra0 = track0.loadTrajectories();
 
-        LoadTrack track = new LoadTrack();
+        LoadETHPedestrian track = new LoadETHPedestrian();
         Trajectories tra = track.loadTrajectories();
 
 
-        tra.analiseSpeedTrajectories(1,track);
+        tra.analiseSpeedTrajectories(2,track);
     }
 
     @Test

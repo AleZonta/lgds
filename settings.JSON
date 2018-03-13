@@ -1,11 +1,12 @@
 {
   "IDSATraces": "/Users/alessandrozonta/Documents/lgds/tra.json",
   "translate": 1,
-  "GeoLifeTrace": "/Users/alessandrozonta/Downloads/Geolife trajectories 1.3/Data",
+  "GeoLifeTrace": "/Users/alessandrozonta/Documents/lgds/traGeolife.json",
   "GraphHopperPath": "/Users/alessandrozonta/Documents/lgds/",
   "GoogleAPIKey": "",
   "GraphHopperName" : "netherlands-latest.osm.pbf",
   "Radio": 40,
   "MaxLength": 1500.0,
-  "SourceTrajectories": "/Users/alessandrozonta/Downloads/ewap_dataset/seq_hotel/obsmat.txt"
+  "SourceTrajectories": "/Users/alessandrozonta/Downloads/ewap_dataset/seq_hotel/obsmat.txt",
+  "Smoother": 1
 }

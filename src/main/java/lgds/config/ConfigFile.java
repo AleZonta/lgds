@@ -23,6 +23,7 @@ public class ConfigFile {
     private Double maxLength; //if length is set to 999999.0 it means no limit
     private Boolean translate; //Do i have to translate the original coordinates (only for IDSA)
     private Boolean avoid;
+    private Boolean smoother;
 
 
     //constructor
@@ -38,6 +39,7 @@ public class ConfigFile {
         this.translate = null;
         this.source = null;
         this.avoid = Boolean.FALSE;
+        this.smoother = null;
     }
 
     //method that reads the configfile
@@ -56,6 +58,11 @@ public class ConfigFile {
         this.DBSCANratio = ((Long) jsonObject.get("Radio")).intValue();
         this.maxLength = (Double) jsonObject.get("MaxLength");
         this.source = (String) jsonObject.get("SourceTrajectories");
+        if(((Long) jsonObject.get("Smoother")).intValue()==0){
+            this.smoother = Boolean.FALSE;
+        }else{
+            this.smoother = Boolean.TRUE;
+        }
         if(((Long) jsonObject.get("translate")).intValue()==0){
             this.translate = Boolean.FALSE;
         }else{
@@ -119,10 +126,15 @@ public class ConfigFile {
                 ", translate=" + translate + "\n" +
                 ", avoid=" + avoid + "\n" +
                 ", source=" + source + "\n" +
+                ", smoother=" + smoother + "\n" +
                 '}';
     }
 
     public String getSource() {
         return source;
+    }
+
+    public Boolean getSmoother() {
+        return smoother;
     }
 }

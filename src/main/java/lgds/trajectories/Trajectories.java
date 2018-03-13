@@ -358,6 +358,9 @@ public class Trajectories {
             //the time is going to be computed during the computation
             //throw new Exception("Not yet implemented");
         //}
+        if(type == 2){
+            time = 0.4;
+        }
         List<Double> speeds = new ArrayList<>();
         List<Double> spaceTotals = new ArrayList<>();
         List<Double> times = new ArrayList<>();
@@ -367,6 +370,7 @@ public class Trajectories {
             while (p1 != null){
                 //speed = space / time
                 double space = this.retDistanceUsingDistanceClass(new double[]{p.getLatitude(), p.getLongitude()}, new double[]{p1.getLatitude(), p1.getLongitude()});
+                if (type == 2) space = p.euclideanDistance(p1);
 
 
                 if(type == 1){

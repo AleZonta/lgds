@@ -1,5 +1,7 @@
 package lgds.trajectories;
 
+import KalmanFilter.FixedLagSmoother;
+import KalmanFilter.kalman_filter.StateVector;
 import lgds.Distance.Distance;
 import lgds.load_track.Traces;
 
@@ -20,14 +22,38 @@ public class Trajectory {
     private Integer currentReadPosition; //current position reached reading the file with the trajectory
     private Boolean reachEndFile; //have I reached the end of the file?
     private Boolean fullLoad; //If true the trajectory is full loaded otherwise not
+    private FixedLagSmoother smoother; //Smoother System
+    private boolean usingSmoother;
+
 
     /**
      * Default constructor
+     * default behaviour, no smoother
      */
     public Trajectory(){
         this.points = new ArrayList<>();
         this.currentReadPosition = null;
         this.reachEndFile = Boolean.FALSE;
+        this.smoother = null;
+        this.usingSmoother = false;
+    }
+
+    /**
+     * Constructor one parameter
+     * If using or not the smoother system
+     * @param usingSmoother boolean value if I am using the smoother or not
+     */
+    public Trajectory(boolean usingSmoother){
+        this.points = new ArrayList<>();
+        this.currentReadPosition = null;
+        this.reachEndFile = Boolean.FALSE;
+        this.smoother = null;
+        this.usingSmoother = usingSmoother;
+        if(usingSmoother){
+            this.smoother = new FixedLagSmoother(2);
+        }else{
+            this.smoother = null;
+        }
     }
 
     /**
@@ -52,6 +78,7 @@ public class Trajectory {
         this.firstPoint = firstPoint;
         this.points.add(this.firstPoint);
         this.currentReadPosition = 0;
+        if(this.usingSmoother) this.smoother.setInitialPosition(new KalmanFilter.Point.Point(firstPoint.getLatitude(), firstPoint.getLongitude()));
     }
 
     /**
@@ -107,9 +134,23 @@ public class Trajectory {
             point = storage.loadTrajectory(this.path, this.currentReadPosition);
             this.points.add(point);
         }
+        //am i using the smoother system?
+        if(this.usingSmoother){
+            Point smoothedPoint = null;
+            try {
+                this.smoother.smooth(point.getLatitude(), point.getLongitude()); //smooth the point
+                StateVector x = this.smoother.getSmoothedPoint(); //get the new point
+                if(x != null) smoothedPoint = new Point(x.getX(), x.getY(), point.getAltitude(), point.getDated(), point.getDates(), point.getTime()); //return the point smoothed
+            } catch (Exception e) {
+                //problem with the smoother
+                e.printStackTrace();
+            }
+            if (smoothedPoint != null) point = smoothedPoint;
+        }
         //check if I reach the end
         if (point.equals(this.lastPoint)){
             this.reachEndFile = Boolean.TRUE;
+            if(this.usingSmoother) this.smoother.setEnd();
         }
         return point;
     }
