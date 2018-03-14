@@ -370,8 +370,6 @@ public class Trajectories {
             while (p1 != null){
                 //speed = space / time
                 double space = this.retDistanceUsingDistanceClass(new double[]{p.getLatitude(), p.getLongitude()}, new double[]{p1.getLatitude(), p1.getLongitude()});
-                if (type == 2) space = p.euclideanDistance(p1);
-
 
                 if(type == 1){
                     //need to compute the time between the two points
@@ -388,7 +386,7 @@ public class Trajectories {
                     }
                     times.add(time);
                 }
-
+                times.add(time);
 
                 spaceTotals.add(space);
                 if(time == 0){
