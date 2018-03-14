@@ -100,6 +100,16 @@ public class LoadETHPedestrian implements Traces {
             }
 
             private double getX(){return this.x;}
+
+
+            private void convertToGPSPosition(){
+                Point centralPoint = new Point(47.376345, 8.547657);
+                double newX = centralPoint.getLatitude() + this.x / 10000;
+                double newY = centralPoint.getLongitude() + this.y / 10000;
+                this.x = newX;
+                this.y = newY;
+
+            }
         }
 
         List<lineOfData> lines = new ArrayList<>();
@@ -108,7 +118,9 @@ public class LoadETHPedestrian implements Traces {
             double x = line.get(2);
             double y = line.get(4);
             int id = line.get(1).intValue();
-            lines.add(new lineOfData(x, y, id));
+            lineOfData lOd = new lineOfData(x, y, id);
+            lOd.convertToGPSPosition();
+            lines.add(lOd);
         }
 
         List<Integer> ids = lines.stream().map(x -> x.id).distinct().collect(Collectors.toList());
@@ -178,4 +190,7 @@ public class LoadETHPedestrian implements Traces {
     public Point loadTrajectory(String path, Integer position) {
         return null;
     }
+
+
+
 }

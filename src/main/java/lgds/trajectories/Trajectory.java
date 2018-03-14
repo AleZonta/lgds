@@ -142,8 +142,11 @@ public class Trajectory {
                 StateVector x = this.smoother.getSmoothedPoint(); //get the new point
                 if(x != null) smoothedPoint = new Point(x.getX(), x.getY(), point.getAltitude(), point.getDated(), point.getDates(), point.getTime()); //return the point smoothed
             } catch (Exception e) {
-                //problem with the smoother
-                e.printStackTrace();
+                //not smoothed since the windows hasn't reached yet
+                if (!e.getMessage().equals("Not Smoothed")) {
+                    //problem with the smoother
+                    e.printStackTrace();
+                }
             }
             if (smoothedPoint != null) point = smoothedPoint;
         }
