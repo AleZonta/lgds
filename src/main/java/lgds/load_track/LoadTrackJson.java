@@ -68,7 +68,7 @@ public class LoadTrackJson extends LoadJson implements Traces {
 
         List<String> allowedTrajectories = new ArrayList<>();
         if(this.limitation){
-            String fileName = Paths.get(".").toAbsolutePath().normalize().toString() + "/goodTrajectoriesGeolife";
+            String fileName = Paths.get(".").toAbsolutePath().normalize().toString() + "/data/goodTrajectoriesGeolife";
             try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
                 stream.forEach(allowedTrajectories::add);
             } catch (IOException e) {
