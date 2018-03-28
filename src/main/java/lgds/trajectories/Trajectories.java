@@ -397,6 +397,7 @@ public class Trajectories {
                 //next two points
                 p = p1.deepCopy();
                 p1 = tra.getNextPoint(storage);
+
             }
 
         }

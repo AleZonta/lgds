@@ -104,8 +104,8 @@ public class LoadETHPedestrian implements Traces {
 
             private void convertToGPSPosition(){
                 Point centralPoint = new Point(47.376345, 8.547657);
-                double newX = centralPoint.getLatitude() + this.x / 10000;
-                double newY = centralPoint.getLongitude() + this.y / 10000;
+                double newX = centralPoint.getLatitude() + this.x / 100000;
+                double newY = centralPoint.getLongitude() + this.y / 100000;
                 this.x = newX;
                 this.y = newY;
 

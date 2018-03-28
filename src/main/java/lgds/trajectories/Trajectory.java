@@ -129,7 +129,12 @@ public class Trajectory {
         //if fullLoad is true I do not need to load from file but only read next position
         Point point;
         if (this.fullLoad){
-            point = this.points.get(this.currentReadPosition);
+            try {
+                point = this.points.get(this.currentReadPosition);
+            }catch (Exception e){
+                String a = "dsf";
+                point = null;
+            }
         }else{
             point = storage.loadTrajectory(this.path, this.currentReadPosition);
             this.points.add(point);
@@ -149,6 +154,12 @@ public class Trajectory {
                 }
             }
             if (smoothedPoint != null) point = smoothedPoint;
+        }
+        if(this.usingSmoother){
+            if(this.currentReadPosition == this.points.size() - 1){
+                this.reachEndFile = Boolean.TRUE;
+                if(this.usingSmoother) this.smoother.setEnd();
+            }
         }
         //check if I reach the end
         if (point.equals(this.lastPoint)){
